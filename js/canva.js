@@ -1,6 +1,8 @@
 const canvas = document.getElementById("renderCanvas");
 const engine = new BABYLON.Engine(canvas, true);
 
+// CE FICHIER CREER MA SCENE ET SOCKE MES OBJETS MESH DANS DES VARIABLES => comment je gère les intéraction
+
 const createScene = function () {
     const scene = new BABYLON.Scene(engine);
 
@@ -21,44 +23,12 @@ const createScene = function () {
         // 'meshes' est un tableau de toutes les parties de ton objet 3D
 
         // On cherche l'écran par son nom défini dans le fichier 3D
-        monEcran = scene.getMeshByName("Ecran_Mesh"); // Je connais pas le nom des fichiers
+        monEcran = scene.getMeshByName("monitor_3"); // Je connais pas le nom des fichiers => a si c'est bon j'ai trouvé grace au scene explorer
 
-        // Configuration initiale (ex: activer la transparence)
-        if (monEcran && monEcran.material) {
-            monEcran.material.transparencyMode = BABYLON.Material.MATERIAL_ALPHABLEND;
-            monEcran.material.alpha = 1.0; // Opaque au début
-        }
-    });
+    }) // La j'ai créé ma scene avec mes objects que j'ai affiché dans ma scene
 
 
-    scene.onPointerMove = function (evt) { // Fonction d'écoute d'interaction
-        // On lance un "rayon" depuis la souris
-        const pickResult = scene.pick(scene.pointerX, scene.pointerY);
 
-        if (pickResult.hit && pickResult.pickedMesh) {
-            const mesh = pickResult.pickedMesh;
-
-            // Si on survole un NOUVEL objet
-            if (lastHoveredMesh !== mesh) {
-                lastHoveredMesh = mesh;
-
-                // IDENTIFICATION : On affiche le nom dans la console
-                // C'est ici que tu découvriras que ton écran s'appelle "Cube_001" par exemple
-                console.log("Objet survolé :", mesh.name);
-
-                // LOGIQUE DE TEXTE :
-                if (mesh.name === "NomDeTonEcran") {
-                    afficherInfo("Ceci est l'écran OLED haute résolution.");
-                } else {
-                    masquerInfo();
-                }
-            }
-        } else {
-            // On ne survole rien
-            lastHoveredMesh = null;
-            masquerInfo();
-        }
-    };
     scene.debugLayer.show();
 
     return scene;
@@ -68,26 +38,38 @@ const scene = createScene();
 
 // Boucle de rendu pour l'animation
 engine.runRenderLoop(function () {
-    scene.render();
+    scene.render(); // Affiche ma scene
 });
 
 // Gérer le redimensionnement de la fenêtre
-window.addEventListener("resize", function () {
+window.addEventListener("resize", function () { // Je detecte le resize et je met a jour la taille
     engine.resize();
 });
 
-// 1. Détection du clic sur l'écran
-scene.onPointerDown = function (evt, pickResult) {
-    // Si l'utilisateur clique sur quelque chose
-    if (pickResult.hit && pickResult.pickedMesh.name === "NomDeTonEcran") {
 
-        // 2. Animation du Zoom
-        // On rapproche la caméra de l'écran
-        const animationZoom = new BABYLON.Animation("zoom", "radius", 30, BABYLON.Animation.ANIMATIONTYPE_FLOAT);
-        // ... (config de l'animation)
 
-        // 3. Changement de l'opacité
-        // On rend l'écran transparent pour voir l'intérieur
-        pickResult.pickedMesh.material.alpha = 0.3;
+// Gestionnaire de zones
+const SceneManager = {
+    currentZone: "DESKTOP",
+
+    // Passer d'une zone à l'autre
+    goToZone: function(zoneName) {
+        console.log("Transition vers :", zoneName);
+        this.currentZone = zoneName;
+
+        switch(zoneName) {
+            case "INSIDE":
+                this.setupInsideView();
+                break;
+            case "DESKTOP":
+                this.setupDesktopView();
+                break;
+        }
+    },
+
+    setupInsideView: function() {
+        // 1. Animation de la caméra pour entrer
+        // 2. Rendre l'écran invisible ou très transparent
+        // 3. Afficher les étiquettes des composants internes
     }
 };
