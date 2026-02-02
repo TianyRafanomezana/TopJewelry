@@ -1,0 +1,40 @@
+export const Config = {
+    // 3D Objects & Meshes
+    meshes: {
+        screenMonitor: "monitor_3",
+        screenSurface: "Object_7", // The actual screen mesh
+        pcComponents: ["monitor_3", "keyboard_4", "mouse_5", "cpu_6"],
+        hitboxScreen: "Hitbox_Ecran",
+        hitboxZonePC: "Hitbox_Zone_PC"
+    },
+
+    // Resources & Assets
+    assets: {
+        modelPath: "./object/",
+        modelFile: "pc.glb",
+        screenPlaceholder: "https://placehold.co/600x400/000000/FFFFFF/png?text=SCREEN+ON",
+        particleTexture: "https://www.babylonjs.com/assets/Flare.png"
+    },
+
+    // Visual Effects
+    visuals: {
+        // Echo Effect
+        echoHighlightColor: { r: 0.2, g: 0.8, b: 1 }, // Cyan
+        echoPulseSpeed: 0.05,
+
+        // Particles
+        particles: {
+            color1: { r: 0.2, g: 0.8, b: 1, a: 1.0 }, // Cyan
+            color2: { r: 0.5, g: 0.2, b: 1, a: 1.0 }, // Violet
+            colorDead: { r: 0, g: 0, b: 0.2, a: 0.0 },
+            count: 200,
+            emitRate: 30
+        }
+    },
+
+    // UI Texts
+    ui: {
+        tooltipEcho: "✨ L'Écho du Système",
+        tooltipScreen: "💻 Écran : Cliquez pour allumer"
+    }
+};
