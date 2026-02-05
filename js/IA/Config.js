@@ -44,6 +44,38 @@ export const Config = {
         backgroundColor: { r: 0.1, g: 0.15, b: 0.2, a: 1 }
     },
 
+    // Render Modes for CAD Scene
+    renderModes: {
+        BLUEPRINT: {
+            name: 'blueprint',
+            background: { r: 1, g: 1, b: 1, a: 1 }, // Blanc
+            material: {
+                wireframe: true,
+                alpha: 0.6,
+                color: { r: 0, g: 0, b: 0 }, // Noir
+                emissive: { r: 0, g: 0, b: 0 },
+                specular: { r: 0, g: 0, b: 0 },
+                metallic: 0,
+                roughness: 1
+            }
+        },
+        REALISTIC: {
+            name: 'realistic',
+            background: { r: 0.1, g: 0.15, b: 0.2, a: 1 }, // Sombre
+            restoreOriginal: true // Flag pour restaurer les matériaux originaux
+        },
+        XRAY: {
+            name: 'xray',
+            background: { r: 0.3, g: 0.3, b: 0.35, a: 1 }, // Gris
+            material: {
+                wireframe: false,
+                alpha: 0.3,
+                color: { r: 0.2, g: 0.6, b: 0.8 }, // Bleu
+                emissive: { r: 0.1, g: 0.3, b: 0.4 } // Cyan émissif
+            }
+        }
+    },
+
     // Interaction Map ( Metadata & Priority )
     interactionMap: [
         {
