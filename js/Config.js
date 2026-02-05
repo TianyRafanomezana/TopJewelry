@@ -5,7 +5,8 @@ export const Config = {
         screenSurface: "Object_7", // The actual screen mesh
         pcComponents: ["monitor_3", "keyboard_4", "mouse_5", "cpu_6"],
         hitboxScreen: "Hitbox_Ecran",
-        hitboxZonePC: "Hitbox_Zone_PC"
+        hitboxZonePC: "Hitbox_Zone_PC",
+        powerLED: "Object_18" // Blue LED on tower
     },
 
     // Resources & Assets
@@ -36,5 +37,46 @@ export const Config = {
     ui: {
         tooltipEcho: "✨ L'Écho du Système",
         tooltipScreen: "💻 Écran : Cliquez pour allumer"
-    }
+    },
+
+    // CAD Scene
+    cad: {
+        backgroundColor: { r: 0.1, g: 0.15, b: 0.2, a: 1 }
+    },
+
+    // Interaction Map ( Metadata & Priority )
+    interactionMap: [
+        {
+            id: "screen",
+            pattern: "Hitbox_Ecran",
+            type: "screen_action",
+            priority: 10,
+            cursor: "pointer",
+            tooltip: "💻 Écran : Cliquez pour découvrir la CAO",
+            highlight: { target: "monitor_3", color: "echoHighlightColor" },
+            visuals: ["pulse"],
+            zoomRequired: true // Only visible when zoomed
+        },
+        {
+            id: "zone_pc",
+            pattern: "Hitbox_Zone_PC",
+            type: "focus",
+            priority: 1,
+            cursor: "pointer",
+            tooltip: "Voir la production CAO",
+            highlight: { target: ["monitor_3", "keyboard_4", "mouse_5", "cpu_6"], color: "echoHighlightColor" },
+            visuals: ["pulse"],
+            zoomRequired: false // Only visible when NOT zoomed
+        },
+        {
+            id: "tower",
+            pattern: "cpu_6",
+            type: "power_switch",
+            priority: 20,
+            cursor: "pointer",
+            tooltip: "🔴 Power",
+            highlight: { target: "cpu_6", color: "echoHighlightColor" },
+            zoomRequired: true // Only visible when zoomed
+        }
+    ]
 };

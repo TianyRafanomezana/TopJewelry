@@ -44,10 +44,25 @@ export class SceneManager {
 
         try {
             await this.assetManager.load();
+            // Une fois chargé, on initialise les méta-données d'interaction
+            this.setupInteractions();
             // InteractionManager is managed in Game.js
         } catch (error) {
             console.error("Erreur chargement assets:", error);
         }
+    }
+
+    setupInteractions() {
+        this.scene.meshes.forEach(mesh => {
+            // On vérifie si ce mesh correspond à une config d'interaction
+            const interactionConfig = Config.interactionMap.find(cfg => mesh.name.includes(cfg.pattern));
+
+            if (interactionConfig) {
+                mesh.metadata = mesh.metadata || {};
+                mesh.metadata.interaction = interactionConfig;
+                // On peut aussi initier des choses ici si besoin (visibilité etc)
+            }
+        });
     }
 
     changeScreenContent(imagePath) {

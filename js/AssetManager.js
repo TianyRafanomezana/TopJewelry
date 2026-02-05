@@ -47,7 +47,7 @@ export class AssetManager {
             const box = this.createHitbox(Config.meshes.hitboxScreen, BABYLON.Vector3.Zero(), new BABYLON.Vector3(width, height, depth + 0.05));
             box.position = center;
             box.setParent(screenNode);
-            box.visibility = 0.5; // Debug visible
+            box.visibility = 0; // Invisible
             box.isPickable = true;
         }
     }
@@ -87,9 +87,10 @@ export class AssetManager {
         box.position = position;
 
         const material = new BABYLON.StandardMaterial(name + "_mat", this.scene);
-        material.alpha = 0.5;
+        material.alpha = 0; // Invisible
         material.diffuseColor = new BABYLON.Color3(1, 0, 0);
         box.material = material;
+        box.visibility = 0; // Purely invisible but pickable
 
         return box;
     }
