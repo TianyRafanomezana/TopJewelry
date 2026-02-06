@@ -12,7 +12,7 @@
  * @param {Function} onComplete - Callback à la fin (optionnel)
  */
 export function zoomToMesh(camera, targetMesh, distance = 8, duration = 1500, onComplete = null) {
-    console.log(`🎥 Zoom vers ${targetMesh.name}...`);
+    console.log(`Zoom vers ${targetMesh.name}...`);
 
     // Utiliser la position ABSOLUE (Monde) si c'est un mesh, 
     // sinon utiliser .position (pour les objets fake comme dans resetCameraZoom)
@@ -69,7 +69,7 @@ export function zoomToMesh(camera, targetMesh, distance = 8, duration = 1500, on
         animatable.onAnimationEnd = onComplete;
     }
 
-    console.log(`✅ Zoom lancé (${duration}ms)`);
+    console.log(`Zoom lancé (${duration}ms)`);
 }
 
 /**
@@ -81,7 +81,7 @@ export function zoomToMesh(camera, targetMesh, distance = 8, duration = 1500, on
  * @param {Function} onComplete - Callback
  */
 export function resetCameraZoom(camera, defaultTarget, defaultRadius = 15, duration = 1500, onComplete = null) {
-    console.log("🎥 Retour vue globale...");
+    console.log("Retour vue globale...");
     zoomToMesh(
         camera,
         { position: defaultTarget },
@@ -101,7 +101,7 @@ export function resetCameraZoom(camera, defaultTarget, defaultRadius = 15, durat
  */
 export function toggleAutoRotation(scene, meshToRotate, enable, rotationSpeed = 0.01) {
     if (enable) {
-        console.log("🔄 Rotation automatique activée");
+        console.log("Rotation automatique activée");
 
         let frameCount = 0; // Pour debug
         const rotationFunction = () => {
@@ -109,7 +109,7 @@ export function toggleAutoRotation(scene, meshToRotate, enable, rotationSpeed = 
 
             // Log seulement toutes les 60 frames (1 seconde à 60 FPS)
             if (frameCount % 60 === 0) {
-                console.log(`🔄 Frame ${frameCount}: rotation.y = ${meshToRotate.rotation.y.toFixed(2)}`);
+                console.log(`Frame ${frameCount}: rotation.y = ${meshToRotate.rotation.y.toFixed(2)}`);
             }
             frameCount++;
         };
@@ -118,7 +118,7 @@ export function toggleAutoRotation(scene, meshToRotate, enable, rotationSpeed = 
 
         return rotationFunction; // Retourner pour pouvoir désactiver plus tard
     } else {
-        console.log("⏸️ Rotation automatique désactivée");
+        console.log("Rotation automatique désactivée");
         return null;
     }
 }
@@ -131,7 +131,7 @@ export function toggleAutoRotation(scene, meshToRotate, enable, rotationSpeed = 
 export function stopAutoRotation(scene, rotationFunction) {
     if (rotationFunction) {
         scene.unregisterBeforeRender(rotationFunction);
-        console.log("⏹️ Rotation arrêtée");
+        console.log("Rotation arrêtée");
     }
 }
 
@@ -152,11 +152,11 @@ export function setFocusLevel(level, camera, targets, onComplete = null) {
     const config = levels[level];
 
     if (!config) {
-        console.error(`❌ Niveau de focus inconnu: ${level}`);
+        console.error(`Niveau de focus inconnu: ${level}`);
         return;
     }
 
-    console.log(`🎯 Focus: ${level}`);
+    console.log(`Focus: ${level}`);
 
     zoomToMesh(
         camera,

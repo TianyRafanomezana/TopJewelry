@@ -16,7 +16,7 @@ export function applyMaterialStyle(mesh, modeConfig, originalMaterials) {
     // Si on doit restaurer l'original tel quel
     if (modeConfig.restoreOriginal) {
         if (!original) {
-            console.warn(`⚠️ Pas de matériau original pour ${mesh.name}, ignoré`);
+            console.warn(`Pas de matériau original pour ${mesh.name}, ignoré`);
             return;
         }
         mesh.material = original.clone(`${modeConfig.name}_${mesh.name}`);
@@ -27,7 +27,7 @@ export function applyMaterialStyle(mesh, modeConfig, originalMaterials) {
 
     // Pour les autres modes, on a besoin de matériau
     if (!original && !mesh.material) {
-        console.warn(`⚠️ Pas de matériau pour ${mesh.name}, ignoré`);
+        console.warn(`Pas de matériau pour ${mesh.name}, ignoré`);
         return;
     }
 
@@ -91,7 +91,7 @@ export function applyRenderMode(meshes, modeConfig, originalMaterials, scene) {
         applyMaterialStyle(mesh, modeConfig, originalMaterials);
     });
 
-    console.log(`✅ Mode ${modeConfig.name} appliqué à ${meshes.length} meshes`);
+    console.log(`Mode ${modeConfig.name} appliqué à ${meshes.length} meshes`);
 }
 
 /**
@@ -131,6 +131,6 @@ export function saveOriginalMaterials(meshes) {
         }
     });
 
-    console.log(`💾 ${originalMaterials.size} matériaux originaux sauvegardés`);
+    console.log(`Matériaux originaux sauvegardés`);
     return originalMaterials;
 }

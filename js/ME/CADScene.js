@@ -101,11 +101,11 @@ export class CADScene {
     // INITIALISATION
     // ========================================
     async init() {
-        console.log("🎬 Initialisation scène CAD...");
+        console.log("Initialisation scène CAD...");
         this.scene = new BABYLON.Scene(this.engine);
         this.scene.clearColor = new BABYLON.Color4(1, 1, 1, 1);
 
-        // 🤖 Helpers IA
+        // Helpers IA
         createCADCamera(this.scene, this.engine.getRenderingCanvas());
         createCADLights(this.scene);
         createCADEnvironment(this.scene);
@@ -130,7 +130,7 @@ export class CADScene {
             this.enableBlueprintMode();
         }
 
-        console.log("✅ Scène CAD initialisée");
+        console.log("Scène CAD initialisée");
         return this.scene;
     }
 
@@ -141,10 +141,10 @@ export class CADScene {
         // Nettoyage UI précédent
         if (this.uiManager) this.uiManager.hideAll();
 
-        // 🤖 Setup Interactions & UI en 1 appel helper
+        // Setup Interactions & UI en 1 appel helper
         this.interactions = setupCompleteCADInteractions(this.scene, this, this.uiManager);
 
-        // 🤖 Enter Logic (Camera reset, etc.)
+        // Enter Logic (Camera reset, etc.)
         enterCADScene(this.scene, this.engine, this.uiManager, this.ringMesh, this.interactionState, this.ringHitbox, this.isAnalysisMode);
 
         // Start rotation auto par défaut
@@ -154,7 +154,7 @@ export class CADScene {
     }
 
     exit() {
-        // 🤖 Cleanup via helpere
+        // Cleanup via helpere
         if (this.interactions) {
             this.interactions(); // Appel de la fonction de cleanup retournée par setupCompleteCADInteractions
             this.interactions = null;

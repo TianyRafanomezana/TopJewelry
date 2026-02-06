@@ -157,7 +157,7 @@ export class UIManager {
 
     showStatusModal(isPowerOn) {
         if (!this.statusModal || !this.statusText) return;
-        this.statusText.textContent = isPowerOn ? "💻 PC allumé - Cliquez sur l'écran" : "⚡ Allumez le PC (clic sur la tour)";
+        this.statusText.textContent = isPowerOn ? "PC allumé - Cliquez sur l'écran" : "Allumez le PC (clic sur la tour)";
         this.statusModal.classList.remove('hidden');
     }
     hideStatusModal() { if (this.statusModal) this.statusModal.classList.add('hidden'); }

@@ -8,10 +8,10 @@ const engine = new BABYLON.Engine(canvas, true); // Je créer un moteur babylon 
 let currentScene = null; // je créer une variable currentscene qui contiendra les data de ma scene actuelle (ca sera un objet plus tard)
 let scenes = {}; // je stocke la liste de mes scenes
 // ========================================
-// 2️⃣ CRÉER LES SCÈNES
+// 2 CRÉER LES SCÈNES
 // ========================================
 async function init() {
-    console.log("🚀 Démarrage de l'application...");
+    console.log("Démarrage de l'application...");
 
     // Créer la scène CAD
     const cadScene = new CADScene(engine);
@@ -24,16 +24,16 @@ async function init() {
     scenes.OFFICE = officeScene;
 
     // Démarrer avec OFFICE
-    goToScene('CAD');
+    goToScene('OFFICE');
 
-    console.log("✅ Application démarrée");
+    console.log("Application démarrée");
 }
 
 // ========================================
-// 3️⃣ CHANGER DE SCÈNE
+// 3 CHANGER DE SCÈNE
 // ========================================
 function goToScene(sceneId) {
-    console.log(`🎬 Changement vers scène: ${sceneId}`);
+    console.log(`Changement vers scène: ${sceneId}`);
 
     // Sortir de l'ancienne scène
     if (currentScene) {
@@ -44,14 +44,14 @@ function goToScene(sceneId) {
     currentScene = scenes[sceneId];
     if (currentScene) {
         currentScene.enter(); // Dire "bonjour"
-        console.log(`✅ Scène active: ${sceneId}`);
+        console.log(`Scène active: ${sceneId}`);
     } else {
-        console.error(`❌ Scène ${sceneId} introuvable`);
+        console.error(`Scène ${sceneId} introuvable`);
     }
 }
 
 // ========================================
-// 4️⃣ RENDER LOOP (dessiner en boucle)
+// 4 RENDER LOOP (dessiner en boucle)
 // ========================================
 engine.runRenderLoop(() => {
     if (currentScene && currentScene.scene) {
@@ -60,14 +60,14 @@ engine.runRenderLoop(() => {
 });
 
 // ========================================
-// 5️⃣ RESIZE (ajuster au redimensionnement)
+// 5 RESIZE (ajuster au redimensionnement)
 // ========================================
 window.addEventListener("resize", () => {
     engine.resize();
 });
 
 // ========================================
-// 6️⃣ ÉVÉNEMENTS UI
+// 6 ÉVÉNEMENTS UI
 // ========================================
 
 // Bouton retour bureau (si existe)
@@ -100,7 +100,7 @@ document.querySelectorAll('.timeline-step').forEach((step, index) => {
 });
 
 // ========================================
-// 🚀 LANCER L'APPLICATION
+// LANCER L'APPLICATION
 // ========================================
 window.addEventListener('DOMContentLoaded', () => {
     init();

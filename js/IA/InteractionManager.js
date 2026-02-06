@@ -77,7 +77,7 @@ export class InteractionManager {
                     } else {
                         // Pas zoomé : afficher le tooltip
                         if (config.type === "focus" || config.type === "screen_action") {
-                            tooltipText = "🔍 Voir la production CAO";
+                            tooltipText = "Voir la production CAO";
                         }
                     }
 
@@ -86,7 +86,7 @@ export class InteractionManager {
                     if (tooltipText && !this.isZoomed) this.uiManager.showTooltip(tooltipText);
                     else this.uiManager.hideTooltip();
 
-                    // 🤖 Appel direct helper IA (plus de sceneManager)
+                    // Appel direct helper IA (plus de sceneManager)
                     if (config.highlight && !this.isScreenOn) {
                         const targetName = config.highlight.target || bestCandidate.name;
                         const colorDef = Config.visuals[config.highlight.color] || { r: 1, g: 1, b: 1 };
@@ -106,7 +106,7 @@ export class InteractionManager {
         this.uiManager.hideTooltip();
         document.body.style.cursor = "default";
 
-        // 🤖 Appel direct helper IA
+        // Appel direct helper IA
         updateHighlight(this.scene, this.hl, Config.meshes.pcComponents, false);
 
         const ecran = this.scene.getMeshByName(Config.meshes.hitboxScreen);
@@ -198,7 +198,7 @@ export class InteractionManager {
         if (this.isScreenOn) return;
         this.isScreenOn = true;
 
-        // 🤖 Appel direct helper IA
+        // Appel direct helper IA
         setLEDPower(this.scene, true);
 
         if (this.isZoomed) {
@@ -206,7 +206,7 @@ export class InteractionManager {
         }
 
         setTimeout(() => {
-            // 🤖 Appel direct helper IA
+            // Appel direct helper IA
             changeScreenContent(this.scene, Config.assets.screenPlaceholder, true);
         }, 800);
 
@@ -217,14 +217,14 @@ export class InteractionManager {
         if (!this.isScreenOn) return;
         this.isScreenOn = false;
 
-        // 🤖 Appel direct helper IA
+        // Appel direct helper IA
         setLEDPower(this.scene, false);
 
         if (this.isZoomed) {
             this.uiManager.showStatusModal(false);
         }
 
-        // 🤖 Appel direct helper IA
+        // Appel direct helper IA
         changeScreenContent(this.scene, null);
     }
 
@@ -245,10 +245,10 @@ export class InteractionManager {
 
             if (this.isScreenOn) {
                 this.isScreenOn = false;
-                // 🤖 Appel direct helper IA
+                // Appel direct helper IA
                 setLEDPower(this.scene, false);
             }
-            // 🤖 Appel direct helper IA
+            // Appel direct helper IA
             changeScreenContent(this.scene, null);
 
             setTimeout(() => {

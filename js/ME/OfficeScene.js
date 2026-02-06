@@ -27,27 +27,27 @@ export class OfficeScene {
     // INITIALISATION - Que des appels !
     // ========================================
     async init() {
-        console.log("🏢 Initialisation scène Bureau...");
+        console.log("Initialisation scène Bureau...");
 
         // Créer la scène
         this.scene = new BABYLON.Scene(this.engine);
         this.scene.clearColor = new BABYLON.Color4(0.2, 0.2, 0.25, 1);
 
-        // 🤖 Appels helpers IA
+        // Appels helpers IA
         createOfficeCamera(this.scene);
         createOfficeLights(this.scene);
 
         // Highlight Layer
         this.hl = new BABYLON.HighlightLayer("hl1", this.scene);
 
-        // 🤖 AssetManager charge le PC
+        // AssetManager charge le PC
         this.assetManager = new AssetManager(this.scene, this);
         await this.assetManager.load();
 
         // UIManager
         this.uiManager = new UIManager();
 
-        // 🤖 Config TOUTES les interactions en 1 ligne
+        // Config TOUTES les interactions en 1 ligne
         this.interactions = await setupCompleteOfficeInteractions(
             this.scene,
             this.hl,
@@ -55,7 +55,7 @@ export class OfficeScene {
             () => this.sceneManager.goToScene('CAD')
         );
 
-        console.log("✅ Scène Bureau initialisée");
+        console.log("Scène Bureau initialisée");
         return this.scene;
     }
 

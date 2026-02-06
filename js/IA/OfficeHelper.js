@@ -12,7 +12,7 @@ export function changeScreenContent(scene, imagePath, fadeIn = false) {
     const screenMesh = scene.getMeshByName(Config.meshes.screenSurface);
 
     if (!screenMesh) {
-        console.warn("⚠️ Écran non trouvé");
+        console.warn("Écran non trouvé");
         return;
     }
 
@@ -38,7 +38,7 @@ export function changeScreenContent(scene, imagePath, fadeIn = false) {
         } else {
             screenMaterial.emissiveColor = BABYLON.Color3.White();
         }
-        console.log("📺 Écran allumé avec image");
+        console.log("Écran allumé avec image");
     } else {
         screenMaterial.diffuseTexture = null;
         screenMaterial.emissiveTexture = null;
@@ -46,7 +46,7 @@ export function changeScreenContent(scene, imagePath, fadeIn = false) {
         screenMaterial.diffuseColor = BABYLON.Color3.Black();
         screenMaterial.emissiveColor = BABYLON.Color3.Black();
         screenMaterial.specularColor = BABYLON.Color3.Black();
-        console.log("📺 Écran éteint");
+        console.log("Écran éteint");
     }
 }
 
@@ -62,7 +62,7 @@ export function setLEDPower(scene, isOn) {
     }
 
     if (!ledMesh) {
-        console.warn("⚠️ LED non trouvée");
+        console.warn("LED non trouvée");
         return;
     }
 
@@ -92,7 +92,7 @@ export function setLEDPower(scene, isOn) {
             }, 30);
         }, 200); // 200ms delay before fade-in starts
 
-        console.log("💡 LED allumage progressif...");
+        console.log("LED allumage progressif...");
     } else {
         // Turn LED OFF with fade-out
         let intensity = 1;
@@ -110,7 +110,7 @@ export function setLEDPower(scene, isOn) {
             }
         }, 30);
 
-        console.log("💡 LED extinction progressive...");
+        console.log("LED extinction progressive...");
     }
 }
 
@@ -129,7 +129,7 @@ export function createOfficeCamera(scene) {
     camera.lowerRadiusLimit = 5;
     camera.upperRadiusLimit = 5;
     camera.panningSensibility = 0;
-    console.log("📷 Caméra créée");
+    console.log("Caméra créée");
     return camera;
 }
 
@@ -143,7 +143,7 @@ export function createOfficeLights(scene) {
         scene
     );
     hemiLight.intensity = 1;
-    console.log("💡 Lumière créée");
+    console.log("Lumière créée");
     return hemiLight;
 }
 
@@ -172,7 +172,7 @@ export function updateHighlight(scene, hl, nameOrArray, active, color = BABYLON.
  * Activer la scène bureau (attacher caméra)
  */
 export function enterOfficeScene(scene, engine, interactions) {
-    console.log("🏢 Scène Bureau activée");
+    console.log("Scène Bureau activée");
     const camera = scene.getCameraByName("officeCamera");
     if (camera) {
         camera.attachControl(engine.getRenderingCanvas(), true);
@@ -186,7 +186,7 @@ export function enterOfficeScene(scene, engine, interactions) {
  * Désactiver la scène bureau (détacher caméra)
  */
 export function exitOfficeScene(scene, interactions) {
-    console.log("👋 Scène Bureau désactivée");
+    console.log("Scène Bureau désactivée");
     const camera = scene.getCameraByName("officeCamera");
     if (camera) {
         camera.detachControl();
@@ -197,10 +197,10 @@ export function exitOfficeScene(scene, interactions) {
 }
 
 /**
- * 🤖 HELPER COMPLET : Configure tout en 1 appel !
+ * HELPER COMPLET : Configure tout en 1 appel !
  */
 export async function setupCompleteOfficeInteractions(scene, hl, uiManager, onScreenClick) {
-    console.log("🎮 Configuration COMPLÈTE des interactions bureau (IA)...");
+    console.log("Configuration COMPLÈTE des interactions bureau (IA)...");
 
     // 1. Setup metadata depuis Config
     const { Config } = await import('./Config.js');
@@ -223,12 +223,11 @@ export async function setupCompleteOfficeInteractions(scene, hl, uiManager, onSc
             mesh.metadata.interaction = interactionConfig;
         }
     });
-    console.log("🎯 Metadata d'interactions configurés");
+    console.log("Metadata d'interactions configurés");
 
-    // 2. 🔴 Éteindre LED et écran au démarrage
     setLEDPower(scene, false);
     changeScreenContent(scene, null);
-    console.log("🔴 PC éteint au démarrage");
+    console.log("PC éteint au démarrage");
 
     // 3. Créer InteractionManager (avec highlightLayer, pas sceneManager)
     const { InteractionManager } = await import('./InteractionManager.js');
@@ -240,7 +239,7 @@ export async function setupCompleteOfficeInteractions(scene, hl, uiManager, onSc
         onScreenClick
     );
 
-    console.log("✅ Interactions complètes configurées");
+    console.log("Interactions complètes configurées");
 
     return {
         enable: () => interactionManager.enable(),

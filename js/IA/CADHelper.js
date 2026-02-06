@@ -33,7 +33,7 @@ export function createCADCamera(scene, canvas) {
         canvas.addEventListener('wheel', (e) => e.preventDefault(), { passive: false });
     }
 
-    console.log("📷 Caméra CAD créée");
+    console.log("Caméra CAD créée");
     return camera;
 }
 
@@ -47,7 +47,7 @@ export function createCADLights(scene) {
     const dirLight = new BABYLON.DirectionalLight("dirLight", new BABYLON.Vector3(-1, -2, -1), scene);
     dirLight.intensity = 0.5;
 
-    console.log("💡 Lumières CAD créées");
+    console.log("Lumières CAD créées");
 }
 
 /**
@@ -63,7 +63,7 @@ export function createCADEnvironment(scene) {
 
     // Grille
     createGridLines(scene);
-    console.log("🌍 Environnement CAD créé");
+    console.log("Environnement CAD créé");
 }
 
 function createGridLines(scene) {
@@ -112,11 +112,11 @@ export async function loadCADModel(scene) {
         // NE PAS PARENTER pour l'instant pour éviter les soucis de scale du root
         // ringHitbox.parent = root; 
 
-        console.log("💍 Modèle bague chargé + Hitbox (Active)");
+        console.log("Modèle bague chargé + Hitbox (Active)");
 
         return { root, meshes, originalMaterials, ringHitbox };
     } catch (error) {
-        console.error("❌ Erreur chargement bague:", error);
+        console.error("Erreur chargement bague:", error);
         return null;
     }
 }
@@ -130,7 +130,7 @@ export function toggleAnalysisMode(scene, isActive, ringMesh, interactionState, 
 
     if (isActive) { // Activer -> Zoom In
         zoomToMesh(camera, ringMesh, 5, undefined, () => {
-            console.log("🔍 Analyse activée");
+            console.log("Analyse activée");
             if (interactionState) {
                 interactionState.enabled = true; // Activer interactions pierres
             }
@@ -140,7 +140,7 @@ export function toggleAnalysisMode(scene, isActive, ringMesh, interactionState, 
         });
     } else { // Désactiver -> Zoom Out (Reset)
         resetCameraZoom(camera, ringMesh.position, 15, undefined, () => { // Reset à 15
-            console.log("🔍 Analyse désactivée");
+            console.log("Analyse désactivée");
             if (interactionState) {
                 interactionState.enabled = false; // Désactiver interactions pierres
                 interactionState.deselectAll();
@@ -175,7 +175,7 @@ export function setupAutoRotation(scene, mesh) {
     const observer = scene.registerBeforeRender(() => {
         mesh.rotation.y += 0.01;
     });
-    console.log("🔄 Rotation auto configurée");
+    console.log("Rotation auto configurée");
     return observer;
 }
 
@@ -193,25 +193,25 @@ export function setupCADInputs(scene, cadScene, ringMesh, interactionState, hitb
         }
         // Restaurer Z comme fallback
         if (e.key === 'z' || e.key === 'Z') {
-            console.log("⌨️ Touche Z pressée -> Toggle Analyse");
+            console.log("Touche Z pressée -> Toggle Analyse");
             cadScene.toggleAnalysisMode();
         }
         // Touche Espace pour la rotation
         if (e.key === ' ') {
             e.preventDefault(); // Empêcher le scroll de la page
-            console.log("⌨️ Touche Espace pressée -> Toggle Rotation");
+            console.log("Touche Espace pressée -> Toggle Rotation");
             cadScene.handleRotationToggle();
         }
         // Touche P pour les pierres
         if (e.key.toLowerCase() === 'p') {
-            console.log("⌨️ Touche P pressée -> Toggle Visibilité Pierres");
+            console.log("Touche P pressée -> Toggle Visibilité Pierres");
             if (cadScene.toggleStonesVisibility) {
                 cadScene.toggleStonesVisibility();
             }
         }
         // Touche D pour le détail (Extraction)
         if (e.key.toLowerCase() === 'd') {
-            console.log("⌨️ Touche D pressée -> Toggle Extraction Detail");
+            console.log("Touche D pressée -> Toggle Extraction Detail");
             if (cadScene.toggleExtraction) {
                 cadScene.toggleExtraction();
             }
@@ -226,14 +226,14 @@ export function setupCADInputs(scene, cadScene, ringMesh, interactionState, hitb
             // Uniquement clic gauche
             if (evt.sourceEvent && evt.sourceEvent.button !== 0) return;
 
-            console.log("⚡ ActionManager déclenché sur :", evt.meshUnderPointer ? evt.meshUnderPointer.name : "unknown");
+            console.log("ActionManager déclenché sur :", evt.meshUnderPointer ? evt.meshUnderPointer.name : "unknown");
 
             // SÉCURITÉ : Ignorer si on a cliqué sur de l'UI HTML au-dessus
             const event = evt.sourceEvent;
             if (event && event.clientX !== undefined) {
                 const element = document.elementFromPoint(event.clientX, event.clientY);
                 if (element && element.tagName !== 'CANVAS') {
-                    console.log("🖱️ ActionManager bloqué par l'UI");
+                    console.log("ActionManager bloqué par l'UI");
                     return;
                 }
             }
@@ -242,10 +242,10 @@ export function setupCADInputs(scene, cadScene, ringMesh, interactionState, hitb
             const isInteractionsDisabled = !interactionState || !interactionState.enabled;
 
             if (isInteractionsDisabled) {
-                console.log("💍 Action Validée -> Zoom !");
+                console.log("Action Validée -> Zoom !");
                 cadScene.toggleAnalysisMode();
             } else {
-                console.log("⚠️ Déjà zoomé, clic ignoré par le gestionnaire de zoom.");
+                console.log("Déjà zoomé, clic ignoré par le gestionnaire de zoom.");
             }
         }
     );
@@ -254,7 +254,7 @@ export function setupCADInputs(scene, cadScene, ringMesh, interactionState, hitb
     if (hitbox) {
         if (!hitbox.actionManager) hitbox.actionManager = new BABYLON.ActionManager(scene);
         hitbox.actionManager.registerAction(toggleZoomAction);
-        console.log("✅ ActionManager attaché à la Hitbox");
+        console.log("ActionManager attaché à la Hitbox");
     }
 
     // Attacher aussi aux meshes de la bague (au cas où la hitbox foire)
@@ -276,7 +276,7 @@ export function setupCADInputs(scene, cadScene, ringMesh, interactionState, hitb
                 m.actionManager.registerAction(toggleZoomAction);
             }
         });
-        console.log("✅ ActionManager attaché aux meshes de la bague");
+        console.log("ActionManager attaché aux meshes de la bague");
     }
 
     // Cleanup function? 
@@ -290,7 +290,7 @@ export function setupCADInputs(scene, cadScene, ringMesh, interactionState, hitb
  * Entrer dans la scène CAD
  */
 export function enterCADScene(scene, engine, uiManager, ringMesh, interactionState, ringHitbox, isAnalysisMode) {
-    console.log("📐 Scène CAD activée - Helper");
+    console.log("Scène CAD activée - Helper");
 
     const camera = scene.getCameraByName("cadCamera");
     if (camera) camera.attachControl(engine.getRenderingCanvas(), true);
@@ -320,7 +320,7 @@ export function toggleAutoRotation(scene, ringMesh, currentCallback) {
     if (currentCallback) {
         // Stop
         scene.unregisterBeforeRender(currentCallback);
-        console.log("⏸️ Rotation stoppée");
+        console.log("Rotation stoppée");
         return null;
     } else {
         // Start
@@ -333,7 +333,7 @@ export function toggleAutoRotation(scene, ringMesh, currentCallback) {
             ringMesh.rotation.y += 0.005;
         };
         scene.registerBeforeRender(rotateFunc);
-        console.log("▶️ Rotation redémarrée");
+        console.log("Rotation redémarrée");
         return rotateFunc;
     }
 }
@@ -342,7 +342,7 @@ export function toggleAutoRotation(scene, ringMesh, currentCallback) {
  * Sortir de la scène CAD
  */
 export function exitCADScene(scene, rotationFunction, inputHandler) {
-    console.log("👋 Scène CAD désactivée - Helper");
+    console.log("Scène CAD désactivée - Helper");
 
     const camera = scene.getCameraByName("cadCamera");
     if (camera) camera.detachControl();
@@ -417,15 +417,15 @@ export function setCADRenderMode(modeName, allMeshes, originalMaterials, stones,
     switch (modeName) {
         case 'BLUEPRINT':
             config = Config.renderModes.BLUEPRINT;
-            displayName = "📐 Mode Blueprint";
+            displayName = "Mode Blueprint";
             break;
         case 'REALISTIC':
             config = Config.renderModes.REALISTIC;
-            displayName = "🎨 Mode Réaliste";
+            displayName = "Mode Réaliste";
             break;
         case 'XRAY':
             config = Config.renderModes.XRAY;
-            displayName = "🔍 Mode X-Ray";
+            displayName = "Mode X-Ray";
             break;
         default:
             console.warn("Mode inconnu:", modeName);
@@ -455,7 +455,7 @@ export function cycleCADRenderMode(currentMode, allMeshes, originalMaterials, st
  * Binds complet de l'UI CAD
  */
 export function setupCompleteCADInteractions(scene, cadScene, uiManager) {
-    console.log("🛠️ Binding complet de l'UI CAD...");
+    console.log("Binding complet de l'UI CAD...");
 
     // 1. Boutons Bas Gauche / Droite
     const bindings = {
@@ -465,10 +465,6 @@ export function setupCompleteCADInteractions(scene, cadScene, uiManager) {
         'btnModeRealistic': (e) => { e.stopPropagation(); cadScene.enableRealisticMode(); },
         'btnModeBlueprint': (e) => { e.stopPropagation(); cadScene.enableBlueprintMode(); },
         'btnModeXRay': (e) => { e.stopPropagation(); cadScene.enableXRayMode(); },
-        'btnSelectAllStones': (e) => {
-            e.stopPropagation();
-            cadScene.interactionState?.selectAllStones();
-        },
         'btnSelectAllMetals': (e) => {
             e.stopPropagation();
             const cat = e.currentTarget.dataset.currentCategory;
@@ -484,12 +480,7 @@ export function setupCompleteCADInteractions(scene, cadScene, uiManager) {
 
     Object.entries(bindings).forEach(([id, func]) => {
         const btn = document.getElementById(id);
-        if (btn) {
-            btn.onpointerdown = (e) => {
-                e.preventDefault();
-                func(e);
-            };
-        }
+        if (btn) btn.onclick = func;
     });
 
     // 2. UI Refresh

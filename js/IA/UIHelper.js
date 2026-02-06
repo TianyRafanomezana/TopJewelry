@@ -69,7 +69,6 @@ export function updateComponentInfoHelper(type, details, introText, uiElements) 
         }
 
         // Visibilité des boutons contextuels
-        const btnSelectAll = stoneInfoModal.querySelector('#btnSelectAllStones');
         const btnSelectAllMetals = stoneInfoModal.querySelector('#btnSelectAllMetals');
         const btnVisibilityModal = stoneInfoModal.querySelector('#btnStonesVisibilityModal');
         const btnExtract = stoneInfoModal.querySelector('#btnExtractStone');
@@ -77,7 +76,6 @@ export function updateComponentInfoHelper(type, details, introText, uiElements) 
         const isStone = type === 'diamond' || type === 'gem';
         const isMetal = type === 'metal' || type === 'bezel' || type === 'prong';
 
-        if (btnSelectAll) btnSelectAll.style.display = isStone ? 'flex' : 'none';
         if (btnSelectAllMetals) {
             btnSelectAllMetals.style.display = isMetal ? 'flex' : 'none';
             if (isMetal) {

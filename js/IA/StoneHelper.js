@@ -26,7 +26,7 @@ export function identifyStones(allMeshes) {
         all: []
     };
 
-    console.log("📋 Analyse des meshes pour identification...");
+    console.log("Analyse des meshes pour identification...");
 
     allMeshes.forEach((mesh) => {
         const name = mesh.name.toLowerCase();
@@ -64,8 +64,8 @@ export function identifyStones(allMeshes) {
         }
     });
 
-    console.log("💎 Pierres:", stones.all.length);
-    console.log("🔩 Métaux:", metals.all.length);
+    console.log("Pierres:", stones.all.length);
+    console.log("Métaux:", metals.all.length);
 
     return { stones, metals };
 }
@@ -92,7 +92,6 @@ export function setupStoneInteraction(scene, stones, metals, onSelectionChange, 
         enabled: false, // Désactivé par défaut
 
         deselectAll: (suppressCallback = false) => {
-            console.log("🧹 deselectAll called (suppressCallback:", suppressCallback, ")");
             // Remettre la pierre à sa place si extraite
             if (state.extractedStone && state.originalPosition) {
                 state.extractedStone.position.copyFrom(state.originalPosition);
@@ -108,11 +107,11 @@ export function setupStoneInteraction(scene, stones, metals, onSelectionChange, 
                 state.metalHighlight.removeMesh(state.selectedMetal);
                 state.selectedMetal = null;
             }
-            // Retirer TOUS les meshes de TOUS les layers (crucial pour le vrac)
+            // Retirer aussi les meshes "Vrac"
             state.stoneHighlight.removeAllMeshes();
-            state.metalHighlight.removeAllMeshes();
 
             if (!suppressCallback && onSelectionChange) onSelectionChange(null, null);
+            console.log("Tout désélectionné");
         },
 
         selectAllStones: () => {
@@ -126,11 +125,10 @@ export function setupStoneInteraction(scene, stones, metals, onSelectionChange, 
 
             // Trigger callback with 'all_stones'
             if (onSelectionChange) onSelectionChange(null, 'all_stones');
-            console.log("💎 Toutes les pierres sélectionnées");
+            console.log("Toutes les pierres sélectionnées");
         },
 
         selectAllMetals: () => {
-            console.log("🔩 selectAllMetals triggered");
             // Nettoyer d'abord sans fermer la modale
             state.deselectAll(true);
 
@@ -141,7 +139,7 @@ export function setupStoneInteraction(scene, stones, metals, onSelectionChange, 
 
             // Trigger callback with 'all_metals'
             if (onSelectionChange) onSelectionChange(null, 'all_metals');
-            console.log(`🔩 ${metals.all.length} métaux sélectionnés`);
+            console.log("Tous les métaux sélectionnés");
         },
 
         selectMetalsByCategory: (category) => {
@@ -162,7 +160,7 @@ export function setupStoneInteraction(scene, stones, metals, onSelectionChange, 
 
             // Trigger callback
             if (onSelectionChange) onSelectionChange(null, `all_${category}`);
-            console.log(`🔩 Tous les éléments de type ${category} sélectionnés`);
+            console.log(`Tous les éléments de type ${category} sélectionnés`);
         },
 
         setStonesVisibility: (visible) => {
@@ -175,7 +173,7 @@ export function setupStoneInteraction(scene, stones, metals, onSelectionChange, 
                 stone.isVisible = visible;
                 stone.isPickable = visible;
             });
-            console.log(`💎 Visibilité des pierres : ${visible ? "Affichées" : "Masquées"}`);
+            console.log(`Visibilité des pierres : ${visible ? "Affichées" : "Masquées"}`);
         },
 
         extractStone: (isExtracting) => {
@@ -207,7 +205,7 @@ export function setupStoneInteraction(scene, stones, metals, onSelectionChange, 
                     const newPos = mesh.getAbsolutePosition().add(delta);
                     mesh.setAbsolutePosition(newPos);
 
-                    console.log("💎 Pierre extraite -> Centrée au Studio Spot (0, 5, 0) + Rotation Reset");
+                    console.log("Pierre extraite -> Centrée au Studio Spot (0, 5, 0) + Rotation Reset");
                 }
             } else {
                 // Remettre en place
@@ -226,7 +224,7 @@ export function setupStoneInteraction(scene, stones, metals, onSelectionChange, 
                     state.extractedStone = null;
                     state.originalPosition = null;
                     state.originalRotation = null;
-                    console.log("💎 Pierre remise en place + Rotation Restaurée");
+                    console.log("Pierre remise en place + Rotation Restaurée");
                 }
             }
         }
@@ -242,7 +240,7 @@ export function setupStoneInteraction(scene, stones, metals, onSelectionChange, 
                 () => {
                     // Uniquement si c'est la pierre déjà sélectionnée
                     if (state.enabled && state.selectedStone === stone) {
-                        console.log("🖱️ Double-clic sur pierre sélectionnée -> Vue Détail");
+                        console.log("Double-clic sur pierre sélectionnée -> Vue Détail");
                         onDoubleClick();
                     }
                 }
@@ -261,7 +259,7 @@ export function setupStoneInteraction(scene, stones, metals, onSelectionChange, 
         if (element && element.tagName !== 'CANVAS') {
             const isUIPart = element.closest('.pointer-events-auto') || element.closest('button') || element.closest('.modal');
             if (isUIPart) {
-                console.log("🖱️ Clic UI bloqué (elementFromPoint:", element.tagName, ")");
+                console.log("Clic UI bloqué (elementFromPoint:", element.tagName, ")");
                 return;
             }
         }
@@ -285,7 +283,7 @@ export function setupStoneInteraction(scene, stones, metals, onSelectionChange, 
                     state.stoneHighlight.removeMesh(mesh);
                     state.selectedStone = null;
                     if (onSelectionChange) onSelectionChange(null, null);
-                    console.log("💎 Pierre désélectionnée");
+                    console.log("Pierre désélectionnée");
                 } else {
                     // Sélectionner nouvelle pierre
                     // IMPORTANT : On nettoie tout le layer (cas Select All précédent)
@@ -300,7 +298,7 @@ export function setupStoneInteraction(scene, stones, metals, onSelectionChange, 
                     if (name.includes('gem')) type = 'gem';
 
                     if (onSelectionChange) onSelectionChange(mesh, type);
-                    console.log(`💎 Pierre sélectionnée: ${mesh.name} (${type})`);
+                    console.log(`Pierre sélectionnée: ${mesh.name} (${type})`);
                 }
             } else if (isMetal) {
                 // Désélectionner la pierre si sélectionnée (ou le groupe de pierres)
@@ -313,7 +311,7 @@ export function setupStoneInteraction(scene, stones, metals, onSelectionChange, 
                     state.metalHighlight.removeMesh(mesh);
                     state.selectedMetal = null;
                     if (onSelectionChange) onSelectionChange(null, null);
-                    console.log("🔩 Métal désélectionné");
+                    console.log("Métal désélectionné");
                 } else {
                     // Sélectionner nouveau métal
                     if (state.selectedMetal) {
@@ -329,7 +327,7 @@ export function setupStoneInteraction(scene, stones, metals, onSelectionChange, 
                     if (name.includes('prong')) metalType = 'prong';
 
                     if (onSelectionChange) onSelectionChange(mesh, metalType);
-                    console.log(`🔩 Métal sélectionné: ${mesh.name} (${metalType})`);
+                    console.log(`Métal sélectionné: ${mesh.name} (${metalType})`);
                 }
             } else {
                 // Clic sur un autre objet (décor, etc.) -> Tout désélectionner
@@ -350,7 +348,7 @@ export function setupStoneInteraction(scene, stones, metals, onSelectionChange, 
  * @param {Object} stoneColorsConfig - Configuration des couleurs (depuis Config.stoneColors)
  */
 export function applyStoneColors(stones, stoneColorsConfig) {
-    console.log("💎 Application des couleurs aux pierres...");
+    console.log("Application des couleurs aux pierres...");
 
     let coloredCount = 0;
 
@@ -407,5 +405,5 @@ export function applyStoneColors(stones, stoneColorsConfig) {
         }
     });
 
-    console.log(`✅ ${coloredCount} pierres colorées`);
+    console.log(`${coloredCount} pierres colorées`);
 }
