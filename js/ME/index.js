@@ -1,21 +1,12 @@
-// ========================================
-// INDEX.JS - VOTRE ORCHESTRATEUR PRINCIPAL
-// ========================================
-// VOUS contrôlez tout le flux ici !
 
 import { CADScene } from './CADScene.js';
 import { OfficeScene } from './OfficeScene.js';
 
-// ========================================
-// 1️⃣ INITIALISATION BABYLON.JS
-// ========================================
-const canvas = document.getElementById("renderCanvas");
-const engine = new BABYLON.Engine(canvas, true);
+const canvas = document.getElementById("renderCanvas"); // Je cherche mon canvas
+const engine = new BABYLON.Engine(canvas, true); // Je créer un moteur babylon - canvas SANS guillemets (c'est la variable, pas du texte !)
 
-// Variables globales simples
-let currentScene = null;  // Quelle scène est active ?
-let scenes = {};          // Stockage de toutes mes scènes
-
+let currentScene = null; // je créer une variable currentscene qui contiendra les data de ma scene actuelle (ca sera un objet plus tard)
+let scenes = {}; // je stocke la liste de mes scenes
 // ========================================
 // 2️⃣ CRÉER LES SCÈNES
 // ========================================
@@ -28,12 +19,12 @@ async function init() {
     scenes.CAD = cadScene;
 
     // Créer la scène Office
-    const officeScene = new OfficeScene(engine);
+    const officeScene = new OfficeScene(engine, { goToScene });
     await officeScene.init();
     scenes.OFFICE = officeScene;
 
-    // Démarrer avec CAD
-    goToScene('CAD');
+    // Démarrer avec OFFICE
+    goToScene('OFFICE');
 
     console.log("✅ Application démarrée");
 }

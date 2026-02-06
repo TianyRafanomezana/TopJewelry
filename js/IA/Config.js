@@ -44,6 +44,24 @@ export const Config = {
         backgroundColor: { r: 0.1, g: 0.15, b: 0.2, a: 1 }
     },
 
+    // Stone Colors (default appearance)
+    stoneColors: {
+        diamond: {
+            color: { r: 0.9, g: 0.95, b: 1.0 },      // Bleu clair glacé
+            emissive: { r: 0.3, g: 0.4, b: 0.5 },     // Légère émission bleue
+            alpha: 0.85,                               // Légèrement transparent
+            metallic: 0.1,
+            roughness: 0.1
+        },
+        gem: {
+            color: { r: 1.0, g: 0.3, b: 0.5 },        // Rose/Rouge (rubis)
+            emissive: { r: 0.4, g: 0.1, b: 0.2 },     // Légère émission rouge
+            alpha: 0.9,
+            metallic: 0.05,
+            roughness: 0.15
+        }
+    },
+
     // Render Modes for CAD Scene
     renderModes: {
         BLUEPRINT: {

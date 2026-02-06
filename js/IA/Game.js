@@ -11,8 +11,8 @@ export class Game {
         this.uiManager = new UIManager((stepNumber) => this.onTimelineStepClick(stepNumber));
 
         // Scene Registry
-        this.scenes = new Map();
-        this.currentSceneId = null;
+        this.scenes = new Map(); // J'utilise un Map pour lister mes scenes
+        this.currentSceneId = null; // Je stocke l'id de la scene actuelle
         this.currentSceneInstance = null;
     }
 
@@ -27,7 +27,7 @@ export class Game {
         this.scenes.set("CAD", cad);
 
         // 2. Launch Defaults
-        await this.goToScene("CAD");
+        await this.goToScene("OFFICE");
 
         // 3. Render Loop
         this.engine.runRenderLoop(() => {

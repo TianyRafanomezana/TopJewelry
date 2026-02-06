@@ -9,6 +9,8 @@ export class CADScene {
         this.currentRenderMode = 'BLUEPRINT'; // BLUEPRINT, REALISTIC, XRAY
         this.originalMaterials = new Map(); // Stocker les matériaux originaux
         this.keydownHandler = null; // Pour cleanup event listener
+        this.rotationCallback = null; // Pour la rotation automatique
+        this.rotationSpeed = 0.01; // Vitesse de rotation (configurable)
     }
 
     async init() {
@@ -70,10 +72,7 @@ export class CADScene {
                 }
             });
 
-            // Animation de rotation
-            this.scene.registerBeforeRender(() => {
-                root.rotation.y += 0.01;
-            });
+            // La rotation sera activée dans enter()
 
             const camera = this.scene.getCameraByName("cadCamera");
             if (camera) {
@@ -480,7 +479,17 @@ export class CADScene {
         if (backButton) backButton.classList.add("hidden");
         if (infoBulle) infoBulle.classList.add("hidden");
 
-        console.log("Scène CAO activée");
+        console.log("🎬 Scène CAO activée");
+
+        // ✨ Démarrer la rotation automatique de la bague
+        if (this.ringMesh && !this.rotationCallback) {
+            this.rotationCallback = this.scene.registerBeforeRender(() => {
+                if (this.ringMesh) {
+                    this.ringMesh.rotation.y += this.rotationSpeed;
+                }
+            });
+            console.log("🔄 Rotation automatique démarrée");
+        }
 
         // Supprimer l'ancien listener s'il existe
         if (this.keydownHandler) {
@@ -510,6 +519,13 @@ export class CADScene {
     exit() {
         const camera = this.scene.getCameraByName("cadCamera");
         if (camera) camera.detachControl();
+
+        // ⏸️ Arrêter la rotation automatique
+        if (this.rotationCallback) {
+            this.scene.unregisterBeforeRender(this.rotationCallback);
+            this.rotationCallback = null;
+            console.log("⏸️ Rotation automatique arrêtée");
+        }
 
         // Nettoyer l'event listener
         if (this.keydownHandler) {

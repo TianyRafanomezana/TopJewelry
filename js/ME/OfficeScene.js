@@ -1,38 +1,72 @@
 // ========================================
-// OFFICE SCENE - Squelette Simple
+// OFFICE SCENE - Version ME
 // ========================================
-// TODO: À remplir selon vos besoins
+// ULTRA SIMPLE : que des appels de fonctions IA !
+
+import { AssetManager } from '../IA/AssetManager.js';
+import { UIManager } from './UIManager.js';
+import {
+    createOfficeCamera,
+    createOfficeLights,
+    enterOfficeScene,
+    exitOfficeScene,
+    setupCompleteOfficeInteractions
+} from '../IA/OfficeHelper.js';
 
 export class OfficeScene {
-    constructor(engine) {
+    constructor(engine, sceneManager) {
         this.engine = engine;
+        this.sceneManager = sceneManager;
         this.scene = null;
+        this.interactions = null;
+        this.uiManager = null;
+        this.hl = null;
     }
 
-    // Initialiser la scène du bureau
+    // ========================================
+    // INITIALISATION - Que des appels !
+    // ========================================
     async init() {
         console.log("🏢 Initialisation scène Bureau...");
 
+        // Créer la scène
         this.scene = new BABYLON.Scene(this.engine);
+        this.scene.clearColor = new BABYLON.Color4(0.2, 0.2, 0.25, 1);
 
-        // TODO: Ajouter caméra, lumières, objets
-        // ...
+        // 🤖 Appels helpers IA
+        createOfficeCamera(this.scene);
+        createOfficeLights(this.scene);
+
+        // Highlight Layer
+        this.hl = new BABYLON.HighlightLayer("hl1", this.scene);
+
+        // 🤖 AssetManager charge le PC
+        this.assetManager = new AssetManager(this.scene, this);
+        await this.assetManager.load();
+
+        // UIManager
+        this.uiManager = new UIManager();
+
+        // 🤖 Config TOUTES les interactions en 1 ligne
+        this.interactions = await setupCompleteOfficeInteractions(
+            this.scene,
+            this.hl,
+            this.uiManager,
+            () => this.sceneManager.goToScene('CAD')
+        );
 
         console.log("✅ Scène Bureau initialisée");
+        return this.scene;
     }
 
-    // Activer la scène
+    // ========================================
+    // ACTIVER / DÉSACTIVER
+    // ========================================
     enter() {
-        console.log("🏢 Scène Bureau activée");
-
-        // TODO: Attacher caméra
-        // TODO: Afficher UI du bureau
+        enterOfficeScene(this.scene, this.engine, this.interactions);
     }
 
-    // Désactiver la scène
     exit() {
-        console.log("👋 Scène Bureau désactivée");
-
-        // TODO: Détacher caméra
+        exitOfficeScene(this.scene, this.interactions);
     }
 }
