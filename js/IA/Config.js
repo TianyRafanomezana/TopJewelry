@@ -62,24 +62,48 @@ export const Config = {
         }
     },
 
-    // Info Details (Texts for Modals)
+    // Info Details (Technical CAD Workflow)
     componentDetails: {
-        intro: "Les pierres précieuses sélectionnées pour cette pièce sont d'une qualité exceptionnelle.",
+        intro: "Découvrez les coulisses de la création : chaque étape technique en 3D assure la solidité et la brillance du bijou final.",
         diamond: {
-            title: "💎 Diamant",
-            description: "Le diamant est la pierre la plus dure et la plus brillante. Symbole d'éternité, il est ici taillé pour maximiser sa réflexion de la lumière."
+            title: "💎 Booleens (Découpe)",
+            description: "En 3D, on utilise le volume du diamant comme un 'emporte-pièce'. On enlève précisément de la matière au métal pour créer un trou parfait (l'assise) où la pierre viendra se loger après la fabrication."
         },
         gem: {
-            title: "🔴 Rubis",
-            description: "Le rubis, variété rouge du corindon, évoque la passion et l'énergie. Sa couleur intense contraste magnifiquement avec le métal."
+            title: "🔴 Le Chaton (Support)",
+            description: "On modélise ici les 'griffes' qui retiendront la pierre. Le défi est de les dessiner assez fines pour l'élégance, mais assez robustes pour que la pierre reste solidement fixée toute une vie."
         },
-        metal: { // Anticipation pour la sélection du métal
-            title: "💍 Monture en Or",
-            description: "La monture est réalisée en or blanc 18 carats, alliant robustesse et élégance pour sublimer les pierres serties."
+        metal: {
+            title: "💍 Le Corps (Anneau)",
+            description: "C'est la base du bijou ! On applique un 'facteur de retrait' (Shrinkage) : on agrandit la bague de +2% en 3D car le métal précieux rétrécit légèrement en refroidissant lors de la fonte."
+        },
+        bezel: {
+            title: "🏗️ Le Chaton (Serti)",
+            description: "Cette structure entoure la pierre pour la maintenir. En CAO, on modélise un 'siège' ultra-précis. S'il est trop lâche, la pierre bougera ; trop serré, elle risque de casser au moment du sertissage."
+        },
+        prong: {
+            title: "🔩 Les Griffes",
+            description: "Ces fils de métal assurent le maintien final. En 3D, on les prévoit 10% plus longs (marges de sertissage) pour donner au joaillier assez de matière à rabattre sur la pierre lors de la finition."
         },
         all_stones: {
-            title: "💎 Ensemble des Pierres",
-            description: "Cette pièce d'exception comporte un total de 43 pierres, dont un diamant central de 2 carats et une constellation de rubis taille brillant."
+            title: "✨ Pavage & Optimisation",
+            description: "Le positionnement des 43 pierres suit une courbe mathématique. Sous chaque pierre, un 'nid d'abeille' est modélisé pour permettre le passage de la lumière et faciliter le nettoyage futur de la pièce."
+        },
+        all_metals: {
+            title: "🔩 Architecture Joaillière",
+            description: "Voici l'ossature complète du bijou : l'anneau (corps), les chatons (supports) et les griffes (maintien). Chaque pièce est imbriquée numériquement pour garantir une solidité structurelle maximale après la fonte."
+        },
+        all_metal: {
+            title: "💍 Tous les Corps",
+            description: "Sélectionner tous les profils d'anneaux. C'est ici que l'on vérifie la cohérence des largeurs et des épaisseurs sur l'ensemble du bijou pour assurer un confort optimal."
+        },
+        all_bezel: {
+            title: "🏗️ Tous les Chatons",
+            description: "Vue d'ensemble de tous les berceaux de pierres. On vérifie ici que chaque serti respecte la même inclinaison et la même profondeur pour un rendu visuel harmonieux."
+        },
+        all_prong: {
+            title: "🔩 Toutes les Griffes",
+            description: "Extraction de l'ensemble des griffes de maintien. Cette vue permet de contrôler que chaque pierre est sécurisée par le même nombre de points d'appui."
         }
     },
 

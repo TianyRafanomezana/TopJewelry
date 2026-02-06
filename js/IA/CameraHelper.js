@@ -14,7 +14,9 @@
 export function zoomToMesh(camera, targetMesh, distance = 8, duration = 1500, onComplete = null) {
     console.log(`🎥 Zoom vers ${targetMesh.name}...`);
 
-    const targetPosition = targetMesh.position || BABYLON.Vector3.Zero();
+    // Utiliser la position ABSOLUE (Monde) si c'est un mesh, 
+    // sinon utiliser .position (pour les objets fake comme dans resetCameraZoom)
+    const targetPosition = (targetMesh.getAbsolutePosition ? targetMesh.getAbsolutePosition() : targetMesh.position) || BABYLON.Vector3.Zero();
 
     // Animation du radius (distance)
     const radiusAnimation = new BABYLON.Animation(

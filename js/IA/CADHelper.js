@@ -158,10 +158,10 @@ export function toggleAnalysisMode(scene, isActive, ringMesh, interactionState, 
 /**
  * Identifier et configurer les pierres
  */
-export function setupCADStones(scene, meshes, onSelectionChange) {
+export function setupCADStones(scene, meshes, onSelectionChange, onDoubleClick) {
     const { stones, metals } = identifyStones(meshes);
     applyStoneColors(stones, Config.stoneColors);
-    const interactionState = setupStoneInteraction(scene, stones, metals, onSelectionChange);
+    const interactionState = setupStoneInteraction(scene, stones, metals, onSelectionChange, onDoubleClick);
 
     return { stones, metals, interactionState };
 }
@@ -228,6 +228,16 @@ export function setupCADInputs(scene, cadScene, ringMesh, interactionState, hitb
 
             console.log("⚡ ActionManager déclenché sur :", evt.meshUnderPointer ? evt.meshUnderPointer.name : "unknown");
 
+            // SÉCURITÉ : Ignorer si on a cliqué sur de l'UI HTML au-dessus
+            const event = evt.sourceEvent;
+            if (event && event.clientX !== undefined) {
+                const element = document.elementFromPoint(event.clientX, event.clientY);
+                if (element && element.tagName !== 'CANVAS') {
+                    console.log("🖱️ ActionManager bloqué par l'UI");
+                    return;
+                }
+            }
+
             // Vérifier l'état de l'interaction
             const isInteractionsDisabled = !interactionState || !interactionState.enabled;
 
@@ -279,34 +289,28 @@ export function setupCADInputs(scene, cadScene, ringMesh, interactionState, hitb
 /**
  * Entrer dans la scène CAD
  */
-export function enterCADScene(scene, engine, uiManager, ringMesh, rotationCallback) {
+export function enterCADScene(scene, engine, uiManager, ringMesh, interactionState, ringHitbox, isAnalysisMode) {
     console.log("📐 Scène CAD activée - Helper");
 
     const camera = scene.getCameraByName("cadCamera");
     if (camera) camera.attachControl(engine.getRenderingCanvas(), true);
 
-    if (uiManager) uiManager.hideAll();
-
-    // Démarrer rotation si pas déjà active
-    let newRotationCallback = rotationCallback;
-    if (ringMesh && !rotationCallback) {
-        // IMPORTANT: Désactiver le quaternion pour permettre la rotation Euler (x,y,z)
-        if (ringMesh.rotationQuaternion) {
-            ringMesh.rotationQuaternion = null;
+    // FORCAGE ZOOM INITIAL (Sécurité)
+    if (ringMesh && !isAnalysisMode) {
+        if (camera) {
+            camera.radius = 15;
+            camera.target = new BABYLON.Vector3(0, 2, 0);
         }
-
-        let frame = 0;
-        const rotateFunc = () => {
-            ringMesh.rotation.y += 0.005;
-            frame++;
-            if (frame % 60 === 0) console.log("🔄 Rotating...", ringMesh.rotation.y.toFixed(2));
-        };
-        scene.registerBeforeRender(rotateFunc);
-        console.log("▶️ Rotation démarrée (Helper). Func:", rotateFunc);
-        return rotateFunc;
+        if (interactionState) {
+            interactionState.enabled = false;
+            interactionState.deselectAll();
+        }
+        if (ringHitbox) {
+            ringHitbox.isPickable = true;
+        }
     }
 
-    return newRotationCallback;
+    return null; // On laisse le caller gérer la rotation initialement ou via toggleAutoRotation
 }
 
 /**
@@ -337,24 +341,68 @@ export function toggleAutoRotation(scene, ringMesh, currentCallback) {
 /**
  * Sortir de la scène CAD
  */
-export function exitCADScene(scene, rotationCallback, inputHandler) {
+export function exitCADScene(scene, rotationFunction, inputHandler) {
     console.log("👋 Scène CAD désactivée - Helper");
 
     const camera = scene.getCameraByName("cadCamera");
     if (camera) camera.detachControl();
 
-    if (rotationCallback) {
-        scene.unregisterBeforeRender(rotationCallback);
+    if (rotationFunction) {
+        scene.unregisterBeforeRender(rotationFunction);
     }
 
     if (inputHandler) {
-        // Nettoyage Clavier
         if (inputHandler.keyHandler) {
             window.removeEventListener('keydown', inputHandler.keyHandler);
         }
-        // Nettoyage Souris (PointerObserver)
-        if (inputHandler.pointerHandler) {
-            scene.onPointerObservable.removeCallback(inputHandler.pointerHandler);
+    }
+}
+
+/**
+ * Gérer l'extraction (Studio View)
+ */
+export function toggleExtractionHelper(cadScene) {
+    if (!cadScene.isAnalysisMode) return;
+
+    cadScene.isExtracted = !cadScene.isExtracted;
+
+    // 1. Rotation de la bague
+    if (cadScene.isExtracted) {
+        cadScene.wasRotatingBeforeExtraction = cadScene.isRotating;
+        if (cadScene.ringMesh) {
+            cadScene.originalRingRotation = cadScene.ringMesh.rotation.clone();
+            cadScene.ringMesh.rotation = new BABYLON.Vector3(0, 0, 0);
+        }
+        if (cadScene.isRotating) {
+            cadScene.handleRotationToggle();
+        }
+    } else {
+        if (cadScene.originalRingRotation && cadScene.ringMesh) {
+            cadScene.ringMesh.rotation.copyFrom(cadScene.originalRingRotation);
+            cadScene.originalRingRotation = null;
+        }
+        if (cadScene.wasRotatingBeforeExtraction && !cadScene.isRotating) {
+            cadScene.handleRotationToggle();
+        }
+    }
+
+    // 2. Translocation pierre
+    if (cadScene.interactionState) {
+        cadScene.interactionState.extractStone(cadScene.isExtracted);
+    }
+
+    // 3. UI
+    if (cadScene.uiManager) {
+        cadScene.uiManager.updateExtractionUI(cadScene.isExtracted);
+    }
+
+    // 4. Zoom Caméra
+    const camera = cadScene.scene.getCameraByName("cadCamera");
+    if (camera) {
+        if (cadScene.isExtracted) {
+            zoomToMesh(camera, { getAbsolutePosition: () => new BABYLON.Vector3(0, 5, 0) }, 3, 1000);
+        } else {
+            resetCameraZoom(camera, new BABYLON.Vector3(0, 2, 0), 8, 1000);
         }
     }
 }
@@ -403,4 +451,71 @@ export function cycleCADRenderMode(currentMode, allMeshes, originalMaterials, st
     return setCADRenderMode(nextMode, allMeshes, originalMaterials, stones, scene);
 }
 
+/**
+ * Binds complet de l'UI CAD
+ */
+export function setupCompleteCADInteractions(scene, cadScene, uiManager) {
+    console.log("🛠️ Binding complet de l'UI CAD...");
 
+    // 1. Boutons Bas Gauche / Droite
+    const bindings = {
+        'btnZoomToggle': (e) => { e.stopPropagation(); cadScene.toggleAnalysisMode(); },
+        'btnRotationToggle': (e) => { e.stopPropagation(); cadScene.handleRotationToggle(); },
+        'btnStonesVisibility': (e) => { e.stopPropagation(); cadScene.toggleStonesVisibility(); },
+        'btnModeRealistic': (e) => { e.stopPropagation(); cadScene.enableRealisticMode(); },
+        'btnModeBlueprint': (e) => { e.stopPropagation(); cadScene.enableBlueprintMode(); },
+        'btnModeXRay': (e) => { e.stopPropagation(); cadScene.enableXRayMode(); },
+        'btnSelectAllStones': (e) => {
+            e.stopPropagation();
+            cadScene.interactionState?.selectAllStones();
+        },
+        'btnSelectAllMetals': (e) => {
+            e.stopPropagation();
+            const cat = e.currentTarget.dataset.currentCategory;
+            if (cat && cadScene.interactionState) {
+                cadScene.interactionState.selectMetalsByCategory(cat);
+            } else {
+                cadScene.interactionState?.selectAllMetals();
+            }
+        },
+        'btnStonesVisibilityModal': (e) => { e.stopPropagation(); cadScene.toggleStonesVisibility(); },
+        'btnExtractStone': (e) => { e.stopPropagation(); cadScene.toggleExtraction(); }
+    };
+
+    Object.entries(bindings).forEach(([id, func]) => {
+        const btn = document.getElementById(id);
+        if (btn) {
+            btn.onpointerdown = (e) => {
+                e.preventDefault();
+                func(e);
+            };
+        }
+    });
+
+    // 2. UI Refresh
+    uiManager.showLeftControls();
+    uiManager.updateModeTitle(cadScene.isAnalysisMode ? "MODE ANALYSE" : "MODE PRÉSENTATION");
+    uiManager.updateZoomButtonUI(cadScene.isAnalysisMode);
+    uiManager.updateRenderModeUI(cadScene.currentRenderMode);
+    uiManager.updateRotationButton(cadScene.isRotating);
+
+    // 3. Inputs (Keyboard + Click)
+    let inputHandler = null;
+    setTimeout(() => {
+        if (scene) {
+            inputHandler = setupCADInputs(scene, cadScene, cadScene.ringMesh, cadScene.interactionState, cadScene.ringHitbox);
+        }
+    }, 500);
+
+    // Return cleanup
+    return () => {
+        Object.keys(bindings).forEach(id => {
+            const btn = document.getElementById(id);
+            if (btn) btn.onclick = null;
+        });
+        uiManager.hideLeftControls();
+        if (inputHandler && inputHandler.keyHandler) {
+            window.removeEventListener('keydown', inputHandler.keyHandler);
+        }
+    };
+}

@@ -39,3 +39,19 @@ Le bouton "Rotation" ne mettait pas en pause mais semblait accélérer la rotati
 2. **Accumulation :** À chaque clic sur "Play", au lieu de relancer l'ancienne, on créait une *nouvelle* boucle de rotation qui s'ajoutait à la précédente. 3 clics = 3 moteurs qui tournent en même temps = vitesse x3.
 **Solution :**
 J'ai réécrit la logique dans `CADHelper.js` pour créer une fonction nommée (`rotateFunc`), l'enregistrer, et surtout **retourner cette fonction précise**. Ainsi, quand on clique sur Pause, le système sait exactement quelle fonction arrêter.
+### Vue Studio : Le Détail de la Pierre ("Extraction")
+Le but était de permettre de sortir une pierre de la bague pour la voir de près.
+
+**Problèmes rencontrés :**
+1. **Coordonnées Locales vs Monde :** La bague a une échelle de x100. Un déplacement "local" de 1 unité déplaçait la pierre de 100 unités dans l'univers, la faisant disparaître.
+2. **Tracking Caméra :** La caméra visait la position locale, l'envoyant au mauvais endroit.
+3. **Rotation & Cadrage :** Les pierres sur une bague sont inclinées. En zoomant, on les voyait de travers ou de profil.
+4. **Centrage Imprécis :** Le "point d'origine" (pivot) d'une pierre n'est pas toujours en son centre. Le zoom semblait parfois décalé.
+
+**Solutions :**
+1. **Point d'Observation Fixe (Studio Spot) :** On déplace la pierre à une coordonnée Monde absolue `(0, 5, 0)` via `setAbsolutePosition`. Cela ignore la hiérarchie et l'échelle de la bague.
+2. **Reset de Rotation :** 
+   - On stoppe la rotation de la bague et on la remet "droite" (`rotation = 0`).
+   - On sauvegarde la rotation de la pierre, puis on la remet à plat (`Quaternion.Identity`) pour qu'elle soit face à la caméra.
+3. **Centrage par Bounding Box :** Au lieu de viser le pivot, on calcule le centre géométrique réel de la gemme (`boundingBox.centerWorld`) pour aligner ce centre exactement sur le point de focus de la caméra.
+4. **Auto-Restore :** En quittant la vue, la bague et la pierre retrouvent exactement leurs positions et inclinaisons initiales, et la rotation reprend.

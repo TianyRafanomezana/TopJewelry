@@ -80,17 +80,19 @@ export function identifyStones(allMeshes) {
  * @param {Function} onSelectionChange - Callback (mesh, type) => void
  * @returns {Object} - Objet avec les highlight layers et état de sélection
  */
-export function setupStoneInteraction(scene, stones, metals, onSelectionChange) {
+export function setupStoneInteraction(scene, stones, metals, onSelectionChange, onDoubleClick) {
     const state = {
         selectedStone: null,
         selectedMetal: null,
         extractedStone: null,
         originalPosition: null,
+        originalRotation: null,
         stoneHighlight: new BABYLON.HighlightLayer("stoneHighlight", scene),
         metalHighlight: new BABYLON.HighlightLayer("metalHighlight", scene),
         enabled: false, // Désactivé par défaut
 
-        deselectAll: () => {
+        deselectAll: (suppressCallback = false) => {
+            console.log("🧹 deselectAll called (suppressCallback:", suppressCallback, ")");
             // Remettre la pierre à sa place si extraite
             if (state.extractedStone && state.originalPosition) {
                 state.extractedStone.position.copyFrom(state.originalPosition);
@@ -106,16 +108,16 @@ export function setupStoneInteraction(scene, stones, metals, onSelectionChange) 
                 state.metalHighlight.removeMesh(state.selectedMetal);
                 state.selectedMetal = null;
             }
-            // Retirer aussi les meshes "Vrac"
+            // Retirer TOUS les meshes de TOUS les layers (crucial pour le vrac)
             state.stoneHighlight.removeAllMeshes();
+            state.metalHighlight.removeAllMeshes();
 
-            if (onSelectionChange) onSelectionChange(null, null);
-            console.log("🧹 Tout désélectionné");
+            if (!suppressCallback && onSelectionChange) onSelectionChange(null, null);
         },
 
         selectAllStones: () => {
-            // Nettoyer d'abord
-            state.deselectAll();
+            // Nettoyer d'abord sans fermer la modale
+            state.deselectAll(true);
 
             // Ajouter toutes les pierres au highlight
             stones.all.forEach(stone => {
@@ -125,6 +127,42 @@ export function setupStoneInteraction(scene, stones, metals, onSelectionChange) 
             // Trigger callback with 'all_stones'
             if (onSelectionChange) onSelectionChange(null, 'all_stones');
             console.log("💎 Toutes les pierres sélectionnées");
+        },
+
+        selectAllMetals: () => {
+            console.log("🔩 selectAllMetals triggered");
+            // Nettoyer d'abord sans fermer la modale
+            state.deselectAll(true);
+
+            // Ajouter tous les métaux au highlight
+            metals.all.forEach(metal => {
+                state.metalHighlight.addMesh(metal, BABYLON.Color3.Blue());
+            });
+
+            // Trigger callback with 'all_metals'
+            if (onSelectionChange) onSelectionChange(null, 'all_metals');
+            console.log(`🔩 ${metals.all.length} métaux sélectionnés`);
+        },
+
+        selectMetalsByCategory: (category) => {
+            // Nettoyer d'abord sans fermer la modale
+            state.deselectAll(true);
+
+            let targetList = metals[category] || [];
+
+            // Si on demande les griffes, on inclut aussi les têtes de griffes
+            if (category === 'prong') {
+                targetList = [...targetList, ...(metals.head_prong || [])];
+            }
+
+            // Ajouter tous les métaux de cette catégorie au highlight
+            targetList.forEach(m => {
+                state.metalHighlight.addMesh(m, BABYLON.Color3.Blue());
+            });
+
+            // Trigger callback
+            if (onSelectionChange) onSelectionChange(null, `all_${category}`);
+            console.log(`🔩 Tous les éléments de type ${category} sélectionnés`);
         },
 
         setStonesVisibility: (visible) => {
@@ -150,40 +188,82 @@ export function setupStoneInteraction(scene, stones, metals, onSelectionChange) 
                     state.extractedStone = mesh;
                     state.originalPosition = mesh.position.clone();
 
-                    const worldPos = mesh.getAbsolutePosition();
-                    const ringCenter = new BABYLON.Vector3(0, 2, 0);
-                    const direction = worldPos.subtract(ringCenter).normalize();
+                    // Sauvegarder la rotation pour remise en place
+                    if (mesh.rotationQuaternion) {
+                        state.originalRotation = mesh.rotationQuaternion.clone();
+                        mesh.rotationQuaternion = BABYLON.Quaternion.Identity();
+                    } else {
+                        state.originalRotation = mesh.rotation.clone();
+                        mesh.rotation = new BABYLON.Vector3(0, 0, 0);
+                    }
 
-                    mesh.translate(direction, 1.5, BABYLON.Space.WORLD);
-                    console.log("💎 Pierre extraite (Radiale Monde)");
+                    // Mode Studio : On déplace la pierre pour que son CENTRE visuel soit à (0, 5, 0)
+                    mesh.computeWorldMatrix(true);
+                    const currentCenter = mesh.getBoundingInfo().boundingBox.centerWorld;
+                    const spot = new BABYLON.Vector3(0, 5, 0);
+                    const delta = spot.subtract(currentCenter);
+
+                    // On applique l'offset à la position absolue actuelle
+                    const newPos = mesh.getAbsolutePosition().add(delta);
+                    mesh.setAbsolutePosition(newPos);
+
+                    console.log("💎 Pierre extraite -> Centrée au Studio Spot (0, 5, 0) + Rotation Reset");
                 }
-
-
-
-
-                // On applique une translation de 3 unités dans l'espace Monde
-                mesh.translate(BABYLON.Axis.Y, 5, BABYLON.Space.WORLD);
-
-                console.log("💎 Pierre extraite (Axe Y Monde)");
             } else {
                 // Remettre en place
                 if (state.extractedStone && state.originalPosition) {
                     state.extractedStone.position.copyFrom(state.originalPosition);
+
+                    // Restaurer la rotation
+                    if (state.originalRotation) {
+                        if (state.extractedStone.rotationQuaternion) {
+                            state.extractedStone.rotationQuaternion.copyFrom(state.originalRotation);
+                        } else {
+                            state.extractedStone.rotation.copyFrom(state.originalRotation);
+                        }
+                    }
+
                     state.extractedStone = null;
                     state.originalPosition = null;
-                    console.log("💎 Pierre remise en place");
+                    state.originalRotation = null;
+                    console.log("💎 Pierre remise en place + Rotation Restaurée");
                 }
             }
         }
     };
 
+    // --- DOUBLE CLIC (Vue Studio) ---
+    if (onDoubleClick) {
+        stones.all.forEach(stone => {
+            if (!stone.actionManager) stone.actionManager = new BABYLON.ActionManager(scene);
+
+            stone.actionManager.registerAction(new BABYLON.ExecuteCodeAction(
+                BABYLON.ActionManager.OnDoublePickTrigger,
+                () => {
+                    // Uniquement si c'est la pierre déjà sélectionnée
+                    if (state.enabled && state.selectedStone === stone) {
+                        console.log("🖱️ Double-clic sur pierre sélectionnée -> Vue Détail");
+                        onDoubleClick();
+                    }
+                }
+            ));
+        });
+    }
+
     // Gestion des clics
     scene.onPointerDown = (evt, pickInfo) => {
-        // Bloquer si interactions désactivées
-        if (!state.enabled) {
-            // Si on clique dans le vide (pas de hit) alors qu'on est désactivé...
-            // Non, si désactivé (vue globale), on ne fait rien.
-            return;
+        // Ignorer si interactions désactivées
+        if (!state.enabled) return;
+
+        // CRITIQUE : Ignorer si le clic vient d'une interface HTML (Modal, etc.)
+        // On utilise elementFromPoint qui est plus précis que evt.target
+        const element = document.elementFromPoint(evt.clientX, evt.clientY);
+        if (element && element.tagName !== 'CANVAS') {
+            const isUIPart = element.closest('.pointer-events-auto') || element.closest('button') || element.closest('.modal');
+            if (isUIPart) {
+                console.log("🖱️ Clic UI bloqué (elementFromPoint:", element.tagName, ")");
+                return;
+            }
         }
 
         if (pickInfo.hit && pickInfo.pickedMesh) {
@@ -242,8 +322,14 @@ export function setupStoneInteraction(scene, stones, metals, onSelectionChange) 
                     state.selectedMetal = mesh;
                     state.metalHighlight.addMesh(mesh, BABYLON.Color3.Blue());
 
-                    if (onSelectionChange) onSelectionChange(mesh, 'metal');
-                    console.log(`🔩 Métal sélectionné: ${mesh.name}`);
+                    // Déterminer le sous-type de métal
+                    const name = mesh.name.toLowerCase();
+                    let metalType = 'metal';
+                    if (name.includes('bezel')) metalType = 'bezel';
+                    if (name.includes('prong')) metalType = 'prong';
+
+                    if (onSelectionChange) onSelectionChange(mesh, metalType);
+                    console.log(`🔩 Métal sélectionné: ${mesh.name} (${metalType})`);
                 }
             } else {
                 // Clic sur un autre objet (décor, etc.) -> Tout désélectionner

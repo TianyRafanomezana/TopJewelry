@@ -60,8 +60,12 @@
     </div>
 
     <button id="backButton"
-        class="hidden absolute top-4 left-4 z-50 bg-white/10 hover:bg-white/20 backdrop-blur-md text-white border border-white/20 px-6 py-2 rounded-lg transition-all duration-300 pointer-events-auto">
-        ← Retour
+        class="hidden absolute top-4 left-4 z-50 bg-white/10 hover:bg-white/20 backdrop-blur-md text-white border border-white/20 px-6 py-2 rounded-lg transition-all duration-300 pointer-events-auto flex items-center gap-2">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="m15 18-6-6 6-6" />
+        </svg>
+        Retour
     </button>
 
     <div id="statusModal"
@@ -75,52 +79,54 @@
 
         <div class="flex items-center gap-3 mb-4">
             <div
-                class="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
-                <span class="text-xl">💎</span>
+                class="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center text-white">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20 7h-9l-3-3h-5l-3 3v13h20v-13z" />
+                </svg>
             </div>
             <h2 class="text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-                Station CAO
+                Workflow Numérique
             </h2>
         </div>
 
         <p class="text-gray-300 text-sm mb-4 leading-relaxed">
-            La création d'une bague commence ici ! Un poste de travail puissant est essentiel pour la <strong
-                class="text-blue-400">Conception Assistée par Ordinateur</strong>.
+            La <strong class="text-blue-400">CAO Joaillière</strong> consiste à créer un jumeau numérique parfait. Ce
+            fichier sera ensuite imprimé en cire pour la <strong class="text-purple-400">Fonte à cire perdue</strong>.
         </p>
 
         <div class="space-y-3 mb-4">
-            <h3 class="text-sm font-semibold text-blue-400 uppercase tracking-wide">Configuration requise</h3>
+            <h3 class="text-sm font-semibold text-blue-400 uppercase tracking-wide">Les étapes de création</h3>
 
-            <div class="flex items-center gap-2 text-sm">
-                <span class="text-green-400">✓</span>
-                <span class="text-gray-300"><strong>GPU</strong> : RTX 3070+ ou équivalent</span>
+            <div class="flex items-center gap-2 text-sm text-gray-300">
+                <span class="text-blue-500 font-bold">1.</span>
+                <span><strong>Le Corps</strong> : Dessin de l'anneau principal.</span>
             </div>
-            <div class="flex items-center gap-2 text-sm">
-                <span class="text-green-400">✓</span>
-                <span class="text-gray-300"><strong>RAM</strong> : 32 Go minimum</span>
+            <div class="flex items-center gap-2 text-sm text-gray-300">
+                <span class="text-blue-500 font-bold">2.</span>
+                <span><strong>Les Chatons</strong> : Ajout des supports de pierres.</span>
             </div>
-            <div class="flex items-center gap-2 text-sm">
-                <span class="text-green-400">✓</span>
-                <span class="text-gray-300"><strong>CPU</strong> : Intel i7 / AMD Ryzen 7+</span>
+            <div class="flex items-center gap-2 text-sm text-gray-300">
+                <span class="text-blue-500 font-bold">3.</span>
+                <span><strong>L'Ajourage</strong> : Perçage pour la lumière.</span>
             </div>
-            <div class="flex items-center gap-2 text-sm">
-                <span class="text-green-400">✓</span>
-                <span class="text-gray-300"><strong>Stockage</strong> : SSD NVMe 1 To</span>
+            <div class="flex items-center gap-2 text-sm text-gray-300">
+                <span class="text-blue-500 font-bold">4.</span>
+                <span><strong>La Finition</strong> : Préparation pour l'impression 3D.</span>
             </div>
         </div>
 
         <div class="space-y-2 pt-3 border-t border-white/10">
-            <h3 class="text-sm font-semibold text-purple-400 uppercase tracking-wide">Logiciels</h3>
+            <h3 class="text-sm font-semibold text-purple-400 uppercase tracking-wide">Outils Spécialisés</h3>
             <div class="flex flex-wrap gap-2">
-                <span class="px-2 py-1 bg-blue-500/20 rounded-md text-xs text-blue-300">Rhino 3D</span>
-                <span class="px-2 py-1 bg-purple-500/20 rounded-md text-xs text-purple-300">MatrixGold</span>
-                <span class="px-2 py-1 bg-red-500/20 rounded-md text-xs text-red-300">SolidWorks</span>
+                <span class="px-2 py-1 bg-blue-500/20 rounded-md text-xs text-blue-300">Modélisation NURBS</span>
+                <span class="px-2 py-1 bg-purple-500/20 rounded-md text-xs text-purple-300">Impression Résine 25μ</span>
             </div>
         </div>
 
         <div class="mt-4 pt-3 border-t border-white/10">
             <p class="text-xs text-gray-400 italic text-center">
-                Allumez le PC pour découvrir la CAO en action
+                Maintenez [ESPACE] pour explorer les volumes
             </p>
         </div>
     </div>
@@ -132,8 +138,8 @@
         <!-- Header Dynamic -->
         <div class="flex items-center gap-3 mb-4">
             <div id="stoneInfoIconContainer"
-                class="w-10 h-10 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-xl flex items-center justify-center">
-                <span id="stoneInfoIcon" class="text-xl">💎</span>
+                class="w-10 h-10 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-xl flex items-center justify-center text-white">
+                <span id="stoneInfoIcon"></span>
             </div>
             <h2 id="stoneInfoTitle"
                 class="text-xl font-bold bg-gradient-to-r from-blue-100 to-white bg-clip-text text-transparent">
@@ -161,20 +167,51 @@
             <!-- Extraction Button (Visible for single stones) -->
             <button id="btnExtractStone"
                 class="w-full py-3 px-4 bg-blue-600/20 hover:bg-blue-600/40 text-blue-300 border border-blue-500/30 rounded-xl flex items-center justify-between transition-all group pointer-events-auto hidden">
-                <span class="text-sm font-semibold">🔍 Voir le détail</span>
-                <span id="extractStoneIcon" class="group-hover:translate-y-[-2px] transition-transform">💎</span>
+                <span class="text-sm font-semibold">Voir le détail</span>
+                <span id="extractStoneIcon"
+                    class="group-hover:translate-y-[-2px] transition-transform text-blue-400"></span>
             </button>
 
             <button id="btnSelectAllStones"
                 class="w-full py-3 px-4 bg-purple-600/20 hover:bg-purple-600/40 text-purple-300 border border-purple-500/30 rounded-xl flex items-center justify-between transition-all group pointer-events-auto">
-                <span class="text-sm font-semibold">💎 Voir toutes les pierres</span>
-                <span class="group-hover:scale-125 transition-transform">✨</span>
+                class="w-full h-10 px-4 flex items-center gap-3 bg-green-600/20 border border-green-500/30 rounded-lg
+                hover:bg-green-600/30 transition-all group">
+                <span id="selectAllIcon" class="text-green-400">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path
+                            d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 0 0 1-1.275-1.275L12 3Z" />
+                        <path d="M5 3v4" />
+                        <path d="M19 17v4" />
+                        <path d="M3 5h4" />
+                        <path d="M17 19h4" />
+                    </svg>
+                </span>
+                <span class="text-sm font-medium text-green-100">Tout sélectionner (Pierres)</span>
+            </button>
+
+            <!-- Bouton Tout Sélectionner Métal (S'affiche si type = metal/bezel/prong) -->
+            <button id="btnSelectAllMetals"
+                class="w-full h-10 px-4 flex items-center gap-3 bg-blue-600/20 border border-blue-500/30 rounded-lg hover:bg-blue-600/30 transition-all group">
+                <span id="selectAllMetalsIcon" class="text-blue-400">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path
+                            d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 0 0 1-1.275-1.275L12 3Z" />
+                        <path d="M5 3v4" />
+                        <path d="M19 17v4" />
+                        <path d="M3 5h4" />
+                        <path d="M17 19h4" />
+                    </svg>
+                </span>
+                <span class="text-sm font-medium text-blue-100">Tout sélectionner (Métal)</span>
             </button>
 
             <button id="btnStonesVisibilityModal"
                 class="w-full py-3 px-4 bg-slate-700/40 hover:bg-slate-700/60 text-white border border-white/10 rounded-xl items-center justify-between transition-all group pointer-events-auto hidden">
-                <span class="text-sm font-semibold">👁️ Masquer les pierres</span>
-                <span id="stonesVisibilityIconModal" class="group-hover:rotate-12 transition-transform">✅</span>
+                <span class="text-sm font-semibold">Masquer les pierres</span>
+                <span id="stonesVisibilityIconModal"
+                    class="group-hover:rotate-12 transition-transform text-white/70"></span>
             </button>
         </div>
 
@@ -195,22 +232,22 @@
         <div class="space-y-3">
             <button id="btnZoomToggle"
                 class="w-full py-3 px-4 bg-blue-500 hover:bg-blue-400 text-white rounded-lg flex items-center justify-between transition-colors shadow-lg shadow-blue-500/30 group">
-                <span class="font-medium">🔍 Mode Analyse</span>
-                <span id="zoomStatusIcon" class="text-white/70 group-hover:text-white">↦</span>
+                <span class="font-medium">Mode Analyse</span>
+                <span id="zoomStatusIcon" class="text-white/70 group-hover:text-white"></span>
             </button>
 
             <!-- Rotation Toggle -->
             <button id="btnRotationToggle"
                 class="w-full py-3 px-4 bg-slate-700 hover:bg-slate-600 text-white rounded-lg flex items-center justify-between transition-colors shadow-lg shadow-slate-500/20 group">
-                <span class="font-medium">🔄 Rotation</span>
-                <span id="rotationStatusIcon" class="text-white/70 group-hover:text-white">⏸️</span>
+                <span class="font-medium">Rotation</span>
+                <span id="rotationStatusIcon" class="text-white/70 group-hover:text-white"></span>
             </button>
 
             <!-- Stones Visibility Toggle -->
             <button id="btnStonesVisibility"
                 class="w-full py-3 px-4 bg-slate-700 hover:bg-slate-600 text-white rounded-lg flex items-center justify-between transition-colors shadow-lg shadow-slate-500/20 group">
-                <span class="font-medium">👁️ Pierres Visibles</span>
-                <span id="stonesVisibilityIcon" class="text-white/70 group-hover:text-white">✅</span>
+                <span class="font-medium">Pierres Visibles</span>
+                <span id="stonesVisibilityIcon" class="text-white/70 group-hover:text-white"></span>
             </button>
 
             <!-- Render Modes Grid -->
@@ -220,18 +257,50 @@
                     <button id="btnModeRealistic"
                         class="p-2 bg-white/5 hover:bg-purple-500/20 border border-white/10 hover:border-purple-500/50 rounded-lg transition-all flex justify-center items-center group"
                         title="Réaliste">
-                        <span class="text-lg group-hover:scale-110 transition-transform">🎨</span>
+                        <span class="group-hover:scale-110 transition-transform text-white/70">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <circle cx="13.5" cy="6.5" r=".5" />
+                                <circle cx="17.5" cy="10.5" r=".5" />
+                                <circle cx="8.5" cy="7.5" r=".5" />
+                                <circle cx="6.5" cy="12.5" r=".5" />
+                                <path
+                                    d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.688-1.688h1.938c3.105 0 5.625-2.52 5.625-5.625 0-4.62-4.62-8.75-10-8.75Z" />
+                            </svg>
+                        </span>
                     </button>
                     <button id="btnModeBlueprint"
                         class="p-2 bg-white/5 hover:bg-blue-500/20 border border-white/10 hover:border-blue-500/50 rounded-lg transition-all flex justify-center items-center group"
                         title="Blueprint">
-                        <span class="text-lg group-hover:scale-110 transition-transform">📐</span>
+                        <span class="group-hover:scale-110 transition-transform text-white/70">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path d="M21.3 15.3 4.7 1.3" />
+                                <path d="m20.3 14.3-2.4-2.4" />
+                                <path d="m15.3 9.3-2.4-2.4" />
+                                <path d="m10.3 4.3-2.4-2.4" />
+                                <path d="m21 21-2.1-2.1" />
+                                <path d="m3 3 18 18" />
+                            </svg>
+                        </span>
                     </button>
                     <button id="btnModeXRay"
                         class="p-2 bg-white/5 hover:bg-teal-500/20 border border-white/10 hover:border-teal-500/50 rounded-lg transition-all flex justify-center items-center group"
                         title="X-Ray">
-                        <span class="text-lg group-hover:scale-110 transition-transform">🔍</span>
-                    </button>
+                        <span class="group-hover:scale-110 transition-transform text-white/70">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path
+                                    d="M17 10c.7-.7 1.69 0 2.5 0 1.5 0 2.5 1 2.5 2.5S21 15 19.5 15c-.81 0-1.8-.7-2.5 0" />
+                                <path d="M17 10c-.7-.7 0-1.69 0-2.5C17 6 16 5 14.5 5S12 6 12 7.5c0 .81.7 1.8 0 2.5" />
+                                <path d="M12 14c-.7.7-1.69 0-2.5 0-1.5 0-2.5-1-2.5-2.5S8 9 9.5 9c.81 0 1.8.7 2.5 0" />
+                                <path d="M7 14c.7.7 0 1.69 0 2.5C7 18 8 19 9.5 19S12 18 12 16.5c0-.81-.7-1.8 0-2.5" />
+                                <path d="m12 10 2 2-2 2-2-2z" />
+                            </svg>
+                        </span>
                 </div>
             </div>
         </div>
