@@ -2,21 +2,21 @@
 
 Projet BabylonJS pour l'exploration interactive d'un bijou en CAO (Conception Assistée par Ordinateur).
 
-## 🚀 Concept
+## Concept
 Ce projet permet de découvrir les étapes techniques de la création joaillière à travers deux environnements :
 1. **Le Bureau (Office)** : Point de départ immersif où l'on allume le poste de travail.
 2. **La Scène CAO (CAD)** : Mode d'analyse technique du bijou avec des outils de rendu et d'extraction de composants.
 
 ---
 
-## 🎨 Architecture : ME / IA
+## Architecture : ME / IA
 Le projet utilise une architecture **Minimalist Engine (ME)** / **Assistant Helpers (IA)** :
 - **ME (`js/ME/`)** : Orchestrateurs simplifiés qui gèrent le flux de l'application. Très lisible, ce code ne contient que la logique de haut niveau.
 - **IA (`js/IA/`)** : Contient les "Helpers" techniques (Calculs Babylon, gestion des caméras, manipulation des matériaux). C'est le "moteur" complexe caché derrière l'interface simple.
 
 ---
 
-## 🎮 Liste des Interactions
+## Liste des Interactions
 
 ### Environnement Bureau (Office)
 - **Survol (Hover)** : Les éléments interactifs (écran, tour, souris...) s'éclairent et affichent une info-bulle.
@@ -40,7 +40,7 @@ Le projet utilise une architecture **Minimalist Engine (ME)** / **Assistant Help
 
 ---
 
-## 🛠️ Difficultés Rencontrées
+## Difficultés Rencontrées
 
 ### 1. Le "Studio Spot" (Extraction de pierre)
 **Défi** : Sortir une pierre inclinée d'une bague qui tourne, sans qu'elle ne disparaisse de l'écran ou ne soit déformée par l'échelle (scale) de la bague.
@@ -56,14 +56,14 @@ Le projet utilise une architecture **Minimalist Engine (ME)** / **Assistant Help
 
 ---
 
-## ⏳ Ce qui a pris le plus de temps
+## Ce qui a pris le plus de temps
 1. **La Refactorisation (Architecture)** : Passer d'un code monolithique difficile à maintenir à une structure ME/IA modulaire a demandé une réorganisation complète des dépendances.
 2. **Le système de sélection & Highlight** : Gérer les différents types de meshes (gemmes vs métaux) et s'assurer que les calques de surbrillance (`HighlightLayer`) se nettoient correctement lors des sélections multiples.
 3. **La gestion des caméras** : Créer des transitions fluides (interpolations) entre les différentes vues tout en gardant des limites de zoom cohérentes.
 
 ---
 
-## 🔍 Éléments clés pour l'évaluation
+## Éléments clés pour l'évaluation
 - **Structure Logicielle** : Clarté de la séparation entre `js/ME` (Orchestration) et `js/IA` (Logique technique).
 - **UX (User Experience)** : Feedback visuel constant (highlights, curseurs, tooltips, modales intuitives).
 - **Ressources** : Utilisation du fichier `Config.js` pour centraliser toutes les données (couleurs, chemins d'accès, textes).

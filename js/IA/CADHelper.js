@@ -188,9 +188,6 @@ export function setupCADInputs(scene, cadScene, ringMesh, interactionState, hitb
         if (e.key === 'i' || e.key === 'I') {
             scene.debugLayer.isVisible() ? scene.debugLayer.hide() : scene.debugLayer.show();
         }
-        if (e.key === 'r' || e.key === 'R') {
-            cadScene.handleRenderModeCycle();
-        }
         // Restaurer Z comme fallback
         if (e.key === 'z' || e.key === 'Z') {
             console.log("Touche Z pressée -> Toggle Analyse");
