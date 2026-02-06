@@ -1,57 +1,70 @@
-# TopJewelry
-Projet BabylonJS de bijouterie
+# 💍 RingZ - TopJewelry
 
-Difficulté :
-Trouver comment afficher un matériaux et voir si il est séparable => Gemini ma donné le site 
+Projet BabylonJS pour l'exploration interactive d'un bijou en CAO (Conception Assistée par Ordinateur).
 
-Trouver une idée qui me correspond, j'avais du mal à commencer => j'ai organisé mes taches dans un bloc note
+## 🚀 Concept
+Ce projet permet de découvrir les étapes techniques de la création joaillière à travers deux environnements :
+1. **Le Bureau (Office)** : Point de départ immersif où l'on allume le poste de travail.
+2. **La Scène CAO (CAD)** : Mode d'analyse technique du bijou avec des outils de rendu et d'extraction de composants.
 
-J'arrive pas a créer mes hitbox au bon endroit, je sais pas si c'était pertinent d'en utiliser poiur des formes simples
+---
 
-Je n'arrive pas à sélectionner mon écran et donc à créer une hitbox au bon endroit : 
-    =>Le problème venait du fait que monitor_3 (mon écran) n'est pas un "Mesh" (objet géométrique) mais un "Node"
+## 🎨 Architecture : ME / IA
+Le projet utilise une architecture **Minimalist Engine (ME)** / **Assistant Helpers (IA)** :
+- **ME (`js/ME/`)** : Orchestrateurs simplifiés qui gèrent le flux de l'application. Très lisible, ce code ne contient que la logique de haut niveau.
+- **IA (`js/IA/`)** : Contient les "Helpers" techniques (Calculs Babylon, gestion des caméras, manipulation des matériaux). C'est le "moteur" complexe caché derrière l'interface simple.
 
-J'ai galéré à faire la barre en bas avec les lignes => j'ai demander à l'IA
+---
 
+## 🎮 Liste des Interactions
 
-### Rotation : Le Problème du Quaternion
-Les modèles 3D importés (.glb) ont souvent une propriété `rotationQuaternion` qui bloque la rotation simple `rotation.y`.
-**Solution :** J'ai forcé `mesh.rotationQuaternion = null;` pour reprendre le contrôle manuel de la rotation.
+### Environnement Bureau (Office)
+- **Survol (Hover)** : Les éléments interactifs (écran, tour, souris...) s'éclairent et affichent une info-bulle.
+- **Power On** : Cliquez sur la **Tour PC** pour allumer la LED et l'écran (avec animation de fondu).
+- **Entrer en CAO** : Un clic sur l'**Écran allumé** vous propulse dans le mode analyse.
+- **Retour** : Le bouton "Back" permet de quitter le zoom écran.
 
-### Clic Bague : Le Problème du Raycasting
-Cliquer précisément sur les parties fines de la bague (ou à travers des calques invisibles) était difficile avec le système global `scene.onPointerObservable`.
-**Solutions :**
-1. **Hitbox Invisible :** J'ai créé un cube invisible autour de la bague pour avoir une zone de clic plus large et fiable.
-2. **ActionManager :** J'ai remplacé l'écouteur global par un `BABYLON.ActionManager` attaché directement à cette Hitbox. C'est le système natif de BabylonJS pour gérer les clics sur les objets, beaucoup plus robuste.
+### Environnement CAO (CAD)
+- **Rotation Auto** : Bouton Play/Pause ou **[Espace]** pour stopper/lancer la rotation de la bague.
+- **Zoom Analyse** : Cliquez sur la bague ou utilisez la touche **[Z]** pour zoomer et activer les outils de sélection.
+- **Modes de Rendu** : Basculez entre 3 modes (Boutons ou touche **[R]**) :
+    - **Réaliste** : Matériaux originaux.
+    - **Blueprint** : Vue filaire technique sur fond blanc.
+    - **X-Ray** : Vue transparente pour voir les structures internes.
+- **Sélection Intelligente** : 
+    - Cliquez sur n'importe quel mesh (gemme ou métal) pour l'isoler et voir ses spécificités techniques.
+    - Boutons "Tout sélectionner" (Métaux, Pierres, Chatons, Griffes) pour voir des groupes de composants.
+- **Vue Studio (Extraction)** : 
+    - **Double-clic** sur une pierre sélectionnée ou touche **[D]** : La pierre est "extraite" et centrée exactement au milieu de l'écran avec un reset de sa rotation. Parfait pour vérifier la qualité d'une gemme.
+- **Visibilité** : Touche **[P]** pour masquer/afficher toutes les pierres instantanément.
 
-### Transition : Le "Ghost Click" (Zoom Immédiat)
-En passant du Bureau à la Bague, la scène zoomait instantanément.
-**Cause :** Le clic effectué sur l'écran du PC (pour changer de scène) était détecté *aussi* par la scène suivante dès son chargement.
-**Solution :** J'ai ajouté une sécurité (Debounce) de 500ms dans `CADScene.enter()`. On attend une demi-seconde avant d'activer les interactions de la bague, le temps que le clic précédent soit oublié.
+---
 
-Je n'arrivais pas à pouvoir cliquer sur la bague et que ca zoom avec la souris
+## 🛠️ Difficultés Rencontrées
 
+### 1. Le "Studio Spot" (Extraction de pierre)
+**Défi** : Sortir une pierre inclinée d'une bague qui tourne, sans qu'elle ne disparaisse de l'écran ou ne soit déformée par l'échelle (scale) de la bague.
+**Solution** : Utilisation des coordonnées Monde absolues (`setAbsolutePosition`) à un point fixe `(0, 5, 0)` et calcul du centre géométrique réel (`boundingBox.centerWorld`) au lieu du pivot, pour que la caméra soit toujours parfaitement centrée sur la gemme.
 
-### Rotation : Le bouton qui accélère
-Le bouton "Rotation" ne mettait pas en pause mais semblait accélérer la rotation à chaque clic.
-**Causes :**
-1. **Perte de Référence :** Quand on lançait la rotation, la fonction créée (`scene.registerBeforeRender`) n'était pas correctement stockée. La variable censée la retenir valait `undefined`.
-2. **Accumulation :** À chaque clic sur "Play", au lieu de relancer l'ancienne, on créait une *nouvelle* boucle de rotation qui s'ajoutait à la précédente. 3 clics = 3 moteurs qui tournent en même temps = vitesse x3.
-**Solution :**
-J'ai réécrit la logique dans `CADHelper.js` pour créer une fonction nommée (`rotateFunc`), l'enregistrer, et surtout **retourner cette fonction précise**. Ainsi, quand on clique sur Pause, le système sait exactement quelle fonction arrêter.
-### Vue Studio : Le Détail de la Pierre ("Extraction")
-Le but était de permettre de sortir une pierre de la bague pour la voir de près.
+### 2. Le Problème du Quaternion
+**Défi** : Les modèles `.glb` refusent souvent de tourner avec `rotation.y`.
+**Solution** : Forçage du `rotationQuaternion = null` dans le loader pour reprendre le contrôle manuel via les angles d'Euler.
 
-**Problèmes rencontrés :**
-1. **Coordonnées Locales vs Monde :** La bague a une échelle de x100. Un déplacement "local" de 1 unité déplaçait la pierre de 100 unités dans l'univers, la faisant disparaître.
-2. **Tracking Caméra :** La caméra visait la position locale, l'envoyant au mauvais endroit.
-3. **Rotation & Cadrage :** Les pierres sur une bague sont inclinées. En zoomant, on les voyait de travers ou de profil.
-4. **Centrage Imprécis :** Le "point d'origine" (pivot) d'une pierre n'est pas toujours en son centre. Le zoom semblait parfois décalé.
+### 3. Le "Ghost Click"
+**Défi** : En cliquant sur l'écran pour entrer dans la scène, le clic traversait et zoomait instantanément sur la bague.
+**Solution** : Mise en place d'une sécurité temporelle (debounce) de 500ms qui ignore les entrées souris lors de la transition de scène.
 
-**Solutions :**
-1. **Point d'Observation Fixe (Studio Spot) :** On déplace la pierre à une coordonnée Monde absolue `(0, 5, 0)` via `setAbsolutePosition`. Cela ignore la hiérarchie et l'échelle de la bague.
-2. **Reset de Rotation :** 
-   - On stoppe la rotation de la bague et on la remet "droite" (`rotation = 0`).
-   - On sauvegarde la rotation de la pierre, puis on la remet à plat (`Quaternion.Identity`) pour qu'elle soit face à la caméra.
-3. **Centrage par Bounding Box :** Au lieu de viser le pivot, on calcule le centre géométrique réel de la gemme (`boundingBox.centerWorld`) pour aligner ce centre exactement sur le point de focus de la caméra.
-4. **Auto-Restore :** En quittant la vue, la bague et la pierre retrouvent exactement leurs positions et inclinaisons initiales, et la rotation reprend.
+---
+
+## ⏳ Ce qui a pris le plus de temps
+1. **La Refactorisation (Architecture)** : Passer d'un code monolithique difficile à maintenir à une structure ME/IA modulaire a demandé une réorganisation complète des dépendances.
+2. **Le système de sélection & Highlight** : Gérer les différents types de meshes (gemmes vs métaux) et s'assurer que les calques de surbrillance (`HighlightLayer`) se nettoient correctement lors des sélections multiples.
+3. **La gestion des caméras** : Créer des transitions fluides (interpolations) entre les différentes vues tout en gardant des limites de zoom cohérentes.
+
+---
+
+## 🔍 Éléments clés pour l'évaluation
+- **Structure Logicielle** : Clarté de la séparation entre `js/ME` (Orchestration) et `js/IA` (Logique technique).
+- **UX (User Experience)** : Feedback visuel constant (highlights, curseurs, tooltips, modales intuitives).
+- **Ressources** : Utilisation du fichier `Config.js` pour centraliser toutes les données (couleurs, chemins d'accès, textes).
+- **Rendu** : Qualité des modes Blueprint et X-Ray qui démontrent une manipulation dynamique des matériaux Babylon.

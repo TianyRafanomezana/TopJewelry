@@ -63,6 +63,10 @@ export class OfficeScene {
     // ACTIVER / DÉSACTIVER
     // ========================================
     enter() {
+        if (this.uiManager) {
+            this.uiManager.updateProgress(0);
+            this.uiManager.updateGeneralInfo('OFFICE');
+        }
         enterOfficeScene(this.scene, this.engine, this.interactions);
     }
 

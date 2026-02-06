@@ -200,9 +200,7 @@ export function updateRotationButtonHelper(btn, isRotating) {
 export function updateProgressHelper(step) {
     const steps = [
         document.getElementById("step1"),
-        document.getElementById("step2"),
-        document.getElementById("step3"),
-        document.getElementById("step4")
+        document.getElementById("step2")
     ];
 
     steps.forEach((stepElement, index) => {
@@ -260,3 +258,33 @@ export function updateStonesVisibilityUIHelper(isVisible) {
     if (iconModalEl) iconModalEl.innerHTML = isVisible ? svgClosed : svgOpen; // Inverse logic: proposed action
     if (textModalEl) textModalEl.textContent = isVisible ? 'Masquer les pierres' : 'Afficher les pierres';
 }
+
+/**
+ * Mise à jour des informations générales du modal de droite (Hors pierres)
+ */
+export function updateGeneralInfoHelper(data) {
+    if (!data) return;
+
+    const titleEl = document.getElementById('generalInfoTitle');
+    const introEl = document.getElementById('generalInfoIntro');
+    const stepsContainer = document.getElementById('generalInfoStepsContainer');
+    const footerEl = document.getElementById('generalInfoFooter');
+
+    if (titleEl) titleEl.textContent = data.title;
+    if (introEl) introEl.textContent = data.intro;
+    if (footerEl) footerEl.textContent = data.footer;
+
+    if (stepsContainer) {
+        stepsContainer.innerHTML = '';
+        data.steps.forEach(step => {
+            const stepDiv = document.createElement('div');
+            stepDiv.className = 'flex items-center gap-2 text-sm text-gray-300';
+            stepDiv.innerHTML = `
+                <span class="text-blue-500 font-bold">${step.num}.</span>
+                <span><strong>${step.label}</strong> : ${step.desc}</span>
+            `;
+            stepsContainer.appendChild(stepDiv);
+        });
+    }
+}
+

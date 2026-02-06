@@ -13,7 +13,7 @@ export const Config = {
     assets: {
         modelPath: "./object/",
         modelFile: "pc.glb",
-        screenPlaceholder: "https://placehold.co/600x400/000000/FFFFFF/png?text=SCREEN+ON",
+        screenPlaceholder: "./img/bague screen.png",
         particleTexture: "https://www.babylonjs.com/assets/Flare.png"
     },
 
@@ -36,7 +36,9 @@ export const Config = {
     // UI Texts
     ui: {
         tooltipEcho: "L'Écho du Système",
-        tooltipScreen: "Écran : Cliquez pour allumer"
+        tooltipScreen: "Écran : Cliquez pour allumer",
+        cadWelcome: "Bienvenue dans l'Atelier",
+        cadSubtitle: "Cliquez sur la bague pour commencer l'analyse"
     },
 
     // CAD Scene
@@ -104,6 +106,31 @@ export const Config = {
         all_prong: {
             title: "Toutes les Griffes",
             description: "Extraction de l'ensemble des griffes de maintien. Cette vue permet de contrôler que chaque pierre est sécurisée par le même nombre de points d'appui."
+        }
+    },
+
+    // Scene Specific default info content
+    sceneDetails: {
+        OFFICE: {
+            title: "Espace de Travail",
+            intro: "Bienvenue dans votre atelier virtuel. Ici, la conception joaillière commence par l'allumage du poste de travail et le chargement du projet numérique.",
+            steps: [
+                { num: 1, label: "Poste de travail", desc: "Allumez la tour PC pour activer le système." },
+                { num: 2, label: "Écran CAO", desc: "Cliquez sur l'écran pour charger la bague." },
+                { num: 3, label: "Exploration", desc: "Utilisez la souris pour explorer l'atelier." }
+            ],
+            footer: "Allumez le PC pour commencer l'expérience"
+        },
+        CAD: {
+            title: "Workflow Numérique",
+            intro: "La CAO Joaillière consiste à créer un jumeau numérique parfait. Ce fichier sera ensuite imprimé en cire pour la Fonte à cire perdue.",
+            steps: [
+                { num: 1, label: "Le Corps", desc: "Dessin de l'anneau principal." },
+                { num: 2, label: "Les Chatons", desc: "Ajout des supports de pierres." },
+                { num: 3, label: "L'Ajourage", desc: "Perçage pour la lumière." },
+                { num: 4, label: "La Finition", desc: "Préparation pour l'impression 3D." }
+            ],
+            footer: "Cliquez sur un élement de la bague pour commencer l'analyse"
         }
     },
 

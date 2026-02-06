@@ -78,26 +78,7 @@ if (backButton) {
     });
 }
 
-// Timeline navigation (si existe)
-document.querySelectorAll('.timeline-step').forEach((step, index) => {
-    step.addEventListener('click', () => {
-        const sceneMap = ['OFFICE', 'CAD', 'OFFICE', 'OFFICE'];
-        const targetScene = sceneMap[index];
-
-        if (targetScene) {
-            goToScene(targetScene);
-
-            // Update progress UI
-            document.querySelectorAll('.timeline-step').forEach((s, i) => {
-                if (i <= index) {
-                    s.classList.add('active');
-                } else {
-                    s.classList.remove('active');
-                }
-            });
-        }
-    });
-});
+// La navigation est gérée par InteractionManager via goToScene
 
 // ========================================
 // LANCER L'APPLICATION

@@ -138,8 +138,12 @@ export class CADScene {
     // ACTIVER / DÉSACTIVER SCÈNE
     // ========================================
     enter() {
-        // Nettoyage UI précédent
-        if (this.uiManager) this.uiManager.hideAll();
+        if (this.uiManager) {
+            this.uiManager.hideAll();
+            this.uiManager.updateProgress(1);
+            this.uiManager.showCadWelcome();
+            this.uiManager.updateGeneralInfo('CAD');
+        }
 
         // Setup Interactions & UI en 1 appel helper
         this.interactions = setupCompleteCADInteractions(this.scene, this, this.uiManager);

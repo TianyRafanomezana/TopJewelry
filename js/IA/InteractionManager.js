@@ -149,7 +149,7 @@ export class InteractionManager {
                     if (!this.isZoomed) {
                         this.focusOnScreen();
                     } else if (this.isScreenOn) {
-                        this.uiManager.updateProgress(2);
+                        this.uiManager.updateProgress(1);
                         if (this.onScreenEnter) this.onScreenEnter();
                     }
                 }

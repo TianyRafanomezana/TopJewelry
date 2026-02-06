@@ -13,7 +13,8 @@ import {
     updateProgressHelper,
     showTooltipHelper,
     hideTooltipHelper,
-    updateStonesVisibilityUIHelper
+    updateStonesVisibilityUIHelper,
+    updateGeneralInfoHelper
 } from '../IA/UIHelper.js';
 
 export class UIManager {
@@ -28,6 +29,7 @@ export class UIManager {
         this.infoTitle = document.getElementById('infoTitle');
         this.statusText = document.getElementById('statusText');
         this.modeStatusTitle = document.getElementById('modeStatusTitle');
+        this.cadWelcomeOverlay = document.getElementById('cadWelcomeOverlay');
     }
 
     // ========================================
@@ -91,6 +93,11 @@ export class UIManager {
         updateStonesVisibilityUIHelper(isVisible);
     }
 
+    updateGeneralInfo(sceneKey) {
+        const data = Config.sceneDetails[sceneKey];
+        updateGeneralInfoHelper(data);
+    }
+
     // ========================================
     // AFFICHAGE ANALYSE / CAO
     // ========================================
@@ -150,6 +157,41 @@ export class UIManager {
             this.caoInfoModal.classList.add('hidden');
             this.caoInfoModal.style.display = 'none';
         }
+    }
+
+    showCadWelcome() {
+        if (!this.cadWelcomeOverlay) return;
+
+        // Injecter le texte depuis Config
+        const h1 = this.cadWelcomeOverlay.querySelector('h1');
+        const p = this.cadWelcomeOverlay.querySelector('p');
+        if (h1) h1.textContent = Config.ui.cadWelcome;
+        if (p) p.textContent = Config.ui.cadSubtitle;
+
+        // Reset state
+        this.cadWelcomeOverlay.classList.remove('hidden');
+        this.cadWelcomeOverlay.style.opacity = '0';
+
+        // Force reflow for transition
+        void this.cadWelcomeOverlay.offsetWidth;
+
+        // Fade in
+        this.cadWelcomeOverlay.classList.remove('opacity-0');
+        this.cadWelcomeOverlay.style.opacity = '1';
+
+        // Auto-hide after 4 seconds
+        setTimeout(() => this.hideCadWelcome(), 4000);
+    }
+
+    hideCadWelcome() {
+        if (!this.cadWelcomeOverlay) return;
+        this.cadWelcomeOverlay.classList.add('opacity-0');
+        this.cadWelcomeOverlay.style.opacity = '0';
+
+        // Hide from DOM after transition
+        setTimeout(() => {
+            this.cadWelcomeOverlay.classList.add('hidden');
+        }, 1000);
     }
 
     showBackButton() { if (this.backButton) this.backButton.classList.remove('hidden'); }

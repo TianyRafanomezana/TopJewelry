@@ -73,7 +73,18 @@
         <p id="statusText" class="text-sm font-medium text-center"></p>
     </div>
 
-    <!-- CAO Info Modal (Right Side) -->
+    <!-- CAD Welcome Message -->
+    <div id="cadWelcomeOverlay"
+        class="hidden absolute top-12 left-1/2 transform -translate-x-1/2 z-50 text-center pointer-events-none transition-all duration-1000 opacity-0">
+        <h1 class="text-4xl font-black text-black tracking-widest uppercase mb-2 drop-shadow-2xl">
+            Bienvenue dans l'Atelier
+        </h1>
+        <p class="text-blue-400 font-medium tracking-widest uppercase text-sm animate-pulse">
+            Cliquez sur la bague pour commencer l'analyse
+        </p>
+    </div>
+
+    <!-- General Info Modal (Right Side) -->
     <div id="caoInfoModal"
         class="hidden absolute top-1/2 right-8 transform -translate-y-1/2 z-50 bg-gradient-to-br from-slate-900/95 to-slate-800/95 backdrop-blur-xl text-white border border-blue-400/30 p-6 rounded-2xl shadow-2xl w-80 pointer-events-none transition-all duration-500">
 
@@ -85,48 +96,31 @@
                     <path d="M20 7h-9l-3-3h-5l-3 3v13h20v-13z" />
                 </svg>
             </div>
-            <h2 class="text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-                Workflow Numérique
+            <h2 id="generalInfoTitle"
+                class="text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+                Architecture
             </h2>
         </div>
 
-        <p class="text-gray-300 text-sm mb-4 leading-relaxed">
-            La <strong class="text-blue-400">CAO Joaillière</strong> consiste à créer un jumeau numérique parfait. Ce
-            fichier sera ensuite imprimé en cire pour la <strong class="text-purple-400">Fonte à cire perdue</strong>.
+        <p id="generalInfoIntro" class="text-gray-300 text-sm mb-4 leading-relaxed">
+            Logiciel de modélisation 3D haute précision.
         </p>
 
         <div class="space-y-3 mb-4">
-            <h3 class="text-sm font-semibold text-blue-400 uppercase tracking-wide">Les étapes de création</h3>
-
-            <div class="flex items-center gap-2 text-sm text-gray-300">
-                <span class="text-blue-500 font-bold">1.</span>
-                <span><strong>Le Corps</strong> : Dessin de l'anneau principal.</span>
-            </div>
-            <div class="flex items-center gap-2 text-sm text-gray-300">
-                <span class="text-blue-500 font-bold">2.</span>
-                <span><strong>Les Chatons</strong> : Ajout des supports de pierres.</span>
-            </div>
-            <div class="flex items-center gap-2 text-sm text-gray-300">
-                <span class="text-blue-500 font-bold">3.</span>
-                <span><strong>L'Ajourage</strong> : Perçage pour la lumière.</span>
-            </div>
-            <div class="flex items-center gap-2 text-sm text-gray-300">
-                <span class="text-blue-500 font-bold">4.</span>
-                <span><strong>La Finition</strong> : Préparation pour l'impression 3D.</span>
+            <h3 id="generalInfoStepTitle" class="text-sm font-semibold text-blue-400 uppercase tracking-wide">Étapes
+            </h3>
+            <div id="generalInfoStepsContainer" class="space-y-3">
+                <!-- Injected via JS -->
             </div>
         </div>
 
-        <div class="space-y-2 pt-3 border-t border-white/10">
-            <h3 class="text-sm font-semibold text-purple-400 uppercase tracking-wide">Outils Spécialisés</h3>
-            <div class="flex flex-wrap gap-2">
-                <span class="px-2 py-1 bg-blue-500/20 rounded-md text-xs text-blue-300">Modélisation NURBS</span>
-                <span class="px-2 py-1 bg-purple-500/20 rounded-md text-xs text-purple-300">Impression Résine 25μ</span>
-            </div>
+        <div id="generalInfoExtra" class="space-y-2 pt-3 border-t border-white/10">
+            <!-- Optional extra info (e.g. tools) -->
         </div>
 
         <div class="mt-4 pt-3 border-t border-white/10">
-            <p class="text-xs text-gray-400 italic text-center">
-                Maintenez [ESPACE] pour explorer les volumes
+            <p id="generalInfoFooter" class="text-xs text-gray-400 italic text-center">
+                Explorez le projet
             </p>
         </div>
     </div>
@@ -287,8 +281,32 @@
             </div>
         </div>
 
-        <div class="mt-4 pt-3 border-t border-white/10 text-xs text-white/50 text-center italic">
-            Ou cliquez directement sur la bague
+        <div class="mt-4 pt-3 border-t border-white/10">
+            <p class="text-[10px] text-white/40 font-bold uppercase mb-2 tracking-wider text-center">Raccourcis Clavier
+            </p>
+            <div class="grid grid-cols-2 gap-y-1 text-[10px] text-gray-400">
+                <div class="flex items-center gap-1">
+                    <kbd
+                        class="px-1.5 py-0.5 bg-white/10 rounded border border-white/20 text-white font-mono">ESPACE</kbd>
+                    <span>Rotation</span>
+                </div>
+                <div class="flex items-center gap-1 justify-end">
+                    <kbd class="px-1.5 py-0.5 bg-white/10 rounded border border-white/20 text-white font-mono">R</kbd>
+                    <span>Rendu</span>
+                </div>
+                <div class="flex items-center gap-1">
+                    <kbd class="px-1.5 py-0.5 bg-white/10 rounded border border-white/20 text-white font-mono">P</kbd>
+                    <span>Pierres</span>
+                </div>
+                <div class="flex items-center gap-1 justify-end">
+                    <kbd class="px-1.5 py-0.5 bg-white/10 rounded border border-white/20 text-white font-mono">D</kbd>
+                    <span>Détail</span>
+                </div>
+                <div class="flex items-center gap-1">
+                    <kbd class="px-1.5 py-0.5 bg-white/10 rounded border border-white/20 text-white font-mono">Z</kbd>
+                    <span>Analyse</span>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -326,43 +344,11 @@
                     class="size-7 flex justify-center items-center shrink-0 bg-gray-400/50 text-gray-400 font-medium rounded-full">
                     2
                 </span>
-                <div class="ms-2 w-12 h-1 bg-white/50 rounded"></div>
-            </div>
-            <div class="mt-2">
-                <span class="block text-xs font-medium text-gray-400">
-                    CAO
-                </span>
-            </div>
-        </li>
-
-        <!-- Step 3: Prototype -->
-        <li class="shrink basis-0 flex-1 group">
-            <div class="min-w-7 min-h-7 w-full inline-flex items-center text-xs align-middle">
-                <span id="step3"
-                    class="size-7 flex justify-center items-center shrink-0 bg-gray-400/50 text-gray-400 font-medium rounded-full">
-                    3
-                </span>
-                <div class="ms-2 w-12 h-1 bg-white/50 rounded"></div>
-            </div>
-            <div class="mt-2">
-                <span class="block text-xs font-medium text-gray-400">
-                    Prototype
-                </span>
-            </div>
-        </li>
-
-        <!-- Step 4: Présentation -->
-        <li class="shrink basis-0 flex-1 group">
-            <div class="min-w-7 min-h-7 w-full inline-flex items-center text-xs align-middle">
-                <span id="step4"
-                    class="size-7 flex justify-center items-center shrink-0 bg-gray-400/50 text-gray-400 font-medium rounded-full">
-                    4
-                </span>
                 <div class="ms-2 w-full h-1 flex-1 bg-white/50 rounded hidden"></div>
             </div>
             <div class="mt-2">
                 <span class="block text-xs font-medium text-gray-400">
-                    Présentation
+                    CAO
                 </span>
             </div>
         </li>
