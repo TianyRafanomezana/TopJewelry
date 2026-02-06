@@ -62,6 +62,27 @@ export const Config = {
         }
     },
 
+    // Info Details (Texts for Modals)
+    componentDetails: {
+        intro: "Les pierres précieuses sélectionnées pour cette pièce sont d'une qualité exceptionnelle.",
+        diamond: {
+            title: "💎 Diamant",
+            description: "Le diamant est la pierre la plus dure et la plus brillante. Symbole d'éternité, il est ici taillé pour maximiser sa réflexion de la lumière."
+        },
+        gem: {
+            title: "🔴 Rubis",
+            description: "Le rubis, variété rouge du corindon, évoque la passion et l'énergie. Sa couleur intense contraste magnifiquement avec le métal."
+        },
+        metal: { // Anticipation pour la sélection du métal
+            title: "💍 Monture en Or",
+            description: "La monture est réalisée en or blanc 18 carats, alliant robustesse et élégance pour sublimer les pierres serties."
+        },
+        all_stones: {
+            title: "💎 Ensemble des Pierres",
+            description: "Cette pièce d'exception comporte un total de 43 pierres, dont un diamant central de 2 carats et une constellation de rubis taille brillant."
+        }
+    },
+
     // Render Modes for CAD Scene
     renderModes: {
         BLUEPRINT: {

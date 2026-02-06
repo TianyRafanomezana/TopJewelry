@@ -11,7 +11,7 @@
  * @param {number} duration - Durée de l'animation en ms (défaut: 1000)
  * @param {Function} onComplete - Callback à la fin (optionnel)
  */
-export function zoomToMesh(camera, targetMesh, distance = 8, duration = 1000, onComplete = null) {
+export function zoomToMesh(camera, targetMesh, distance = 8, duration = 1500, onComplete = null) {
     console.log(`🎥 Zoom vers ${targetMesh.name}...`);
 
     const targetPosition = targetMesh.position || BABYLON.Vector3.Zero();
@@ -44,8 +44,8 @@ export function zoomToMesh(camera, targetMesh, distance = 8, duration = 1000, on
         { frame: 60, value: targetPosition.clone() }
     ]);
 
-    // Easing pour un mouvement fluide
-    const easingFunction = new BABYLON.CubicEase();
+    // Easing pour un mouvement fluide (SineEase est le plus doux)
+    const easingFunction = new BABYLON.SineEase();
     easingFunction.setEasingMode(BABYLON.EasingFunction.EASINGMODE_EASEINOUT);
 
     radiusAnimation.setEasingFunction(easingFunction);
@@ -59,7 +59,7 @@ export function zoomToMesh(camera, targetMesh, distance = 8, duration = 1000, on
         0,
         60,
         false,
-        60 / (duration / 1000) // Conversion ms en speed
+        1 / (duration / 1000) // Correction: SpeedRatio = 1 / dur(s) pour base 60fps
     );
 
     // Callback à la fin
@@ -78,7 +78,7 @@ export function zoomToMesh(camera, targetMesh, distance = 8, duration = 1000, on
  * @param {number} duration - Durée de l'animation
  * @param {Function} onComplete - Callback
  */
-export function resetCameraZoom(camera, defaultTarget, defaultRadius = 15, duration = 1000, onComplete = null) {
+export function resetCameraZoom(camera, defaultTarget, defaultRadius = 15, duration = 1500, onComplete = null) {
     console.log("🎥 Retour vue globale...");
     zoomToMesh(
         camera,

@@ -13,3 +13,5 @@ Fonction qui fait passer d'une scene à une autre => gotoScene(sceneName) // Il 
 
 Fonction qui affiche mon bureau
 Fonction qui permet de sélectionner un bureau
+
+Je n'arrivais pas à sélectionner ma bague pour la faire tourner et pouvoir zoomer dessus au clic

@@ -120,9 +120,133 @@
 
         <div class="mt-4 pt-3 border-t border-white/10">
             <p class="text-xs text-gray-400 italic text-center">
-                ⚡ Allumez le PC pour découvrir la CAO en action
+                Allumez le PC pour découvrir la CAO en action
             </p>
         </div>
+    </div>
+
+    <!-- Stone/Component Info Modal (Right Side - Replaces CAO Modal on selection) -->
+    <div id="stoneInfoModal"
+        class="hidden absolute top-1/2 right-8 transform -translate-y-1/2 z-50 bg-gradient-to-br from-slate-900/95 to-slate-800/95 backdrop-blur-xl text-white border border-blue-400/30 p-6 rounded-2xl shadow-2xl w-80 pointer-events-none transition-all duration-500">
+
+        <!-- Header Dynamic -->
+        <div class="flex items-center gap-3 mb-4">
+            <div id="stoneInfoIconContainer"
+                class="w-10 h-10 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-xl flex items-center justify-center">
+                <span id="stoneInfoIcon" class="text-xl">💎</span>
+            </div>
+            <h2 id="stoneInfoTitle"
+                class="text-xl font-bold bg-gradient-to-r from-blue-100 to-white bg-clip-text text-transparent">
+                Détails
+            </h2>
+        </div>
+
+        <!-- General Intro -->
+        <p id="stoneInfoIntro" class="text-gray-400 text-xs mb-4 leading-relaxed border-b border-white/10 pb-4">
+            <!-- Text injected via JS -->
+        </p>
+
+        <!-- Specific Details -->
+        <div class="space-y-2">
+            <h3 id="stoneDetailTitle" class="text-sm font-semibold text-blue-400 uppercase tracking-wide">
+                <!-- Title injected via JS -->
+            </h3>
+            <p id="stoneDetailDesc" class="text-gray-300 text-sm leading-relaxed">
+                <!-- Desc injected via JS -->
+            </p>
+        </div>
+
+        <!-- Select All Stones / Extraction (Moved here) -->
+        <div class="mt-6 flex flex-col gap-2">
+            <!-- Extraction Button (Visible for single stones) -->
+            <button id="btnExtractStone"
+                class="w-full py-3 px-4 bg-blue-600/20 hover:bg-blue-600/40 text-blue-300 border border-blue-500/30 rounded-xl flex items-center justify-between transition-all group pointer-events-auto hidden">
+                <span class="text-sm font-semibold">🔍 Voir le détail</span>
+                <span id="extractStoneIcon" class="group-hover:translate-y-[-2px] transition-transform">💎</span>
+            </button>
+
+            <button id="btnSelectAllStones"
+                class="w-full py-3 px-4 bg-purple-600/20 hover:bg-purple-600/40 text-purple-300 border border-purple-500/30 rounded-xl flex items-center justify-between transition-all group pointer-events-auto">
+                <span class="text-sm font-semibold">💎 Voir toutes les pierres</span>
+                <span class="group-hover:scale-125 transition-transform">✨</span>
+            </button>
+
+            <button id="btnStonesVisibilityModal"
+                class="w-full py-3 px-4 bg-slate-700/40 hover:bg-slate-700/60 text-white border border-white/10 rounded-xl items-center justify-between transition-all group pointer-events-auto hidden">
+                <span class="text-sm font-semibold">👁️ Masquer les pierres</span>
+                <span id="stonesVisibilityIconModal" class="group-hover:rotate-12 transition-transform">✅</span>
+            </button>
+        </div>
+
+        <div class="mt-4 pt-3 border-t border-white/10">
+            <p class="text-[10px] text-gray-500 italic text-center">
+                Cliquez dans le vide pour fermer
+            </p>
+        </div>
+    </div>
+
+    <!-- Left Controls Modal (CAD) -->
+    <div id="leftControlModal"
+        class="hidden absolute top-1/2 left-20 transform -translate-y-1/2 w-64 p-6 rounded-2xl bg-slate-900 border border-white/20 shadow-2xl z-50 transition-all duration-300 pointer-events-auto">
+
+        <h2 class="text-xl font-bold text-white mb-1">Contrôles</h2>
+        <p class="text-xs text-blue-200 mb-4 uppercase tracking-wide">Interaction Manuelle</p>
+
+        <div class="space-y-3">
+            <button id="btnZoomToggle"
+                class="w-full py-3 px-4 bg-blue-500 hover:bg-blue-400 text-white rounded-lg flex items-center justify-between transition-colors shadow-lg shadow-blue-500/30 group">
+                <span class="font-medium">🔍 Mode Analyse</span>
+                <span id="zoomStatusIcon" class="text-white/70 group-hover:text-white">↦</span>
+            </button>
+
+            <!-- Rotation Toggle -->
+            <button id="btnRotationToggle"
+                class="w-full py-3 px-4 bg-slate-700 hover:bg-slate-600 text-white rounded-lg flex items-center justify-between transition-colors shadow-lg shadow-slate-500/20 group">
+                <span class="font-medium">🔄 Rotation</span>
+                <span id="rotationStatusIcon" class="text-white/70 group-hover:text-white">⏸️</span>
+            </button>
+
+            <!-- Stones Visibility Toggle -->
+            <button id="btnStonesVisibility"
+                class="w-full py-3 px-4 bg-slate-700 hover:bg-slate-600 text-white rounded-lg flex items-center justify-between transition-colors shadow-lg shadow-slate-500/20 group">
+                <span class="font-medium">👁️ Pierres Visibles</span>
+                <span id="stonesVisibilityIcon" class="text-white/70 group-hover:text-white">✅</span>
+            </button>
+
+            <!-- Render Modes Grid -->
+            <div>
+                <p class="text-[10px] text-white/40 font-bold uppercase mb-2 tracking-wider">Style Rendu</p>
+                <div class="grid grid-cols-3 gap-2">
+                    <button id="btnModeRealistic"
+                        class="p-2 bg-white/5 hover:bg-purple-500/20 border border-white/10 hover:border-purple-500/50 rounded-lg transition-all flex justify-center items-center group"
+                        title="Réaliste">
+                        <span class="text-lg group-hover:scale-110 transition-transform">🎨</span>
+                    </button>
+                    <button id="btnModeBlueprint"
+                        class="p-2 bg-white/5 hover:bg-blue-500/20 border border-white/10 hover:border-blue-500/50 rounded-lg transition-all flex justify-center items-center group"
+                        title="Blueprint">
+                        <span class="text-lg group-hover:scale-110 transition-transform">📐</span>
+                    </button>
+                    <button id="btnModeXRay"
+                        class="p-2 bg-white/5 hover:bg-teal-500/20 border border-white/10 hover:border-teal-500/50 rounded-lg transition-all flex justify-center items-center group"
+                        title="X-Ray">
+                        <span class="text-lg group-hover:scale-110 transition-transform">🔍</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-4 pt-3 border-t border-white/10 text-xs text-white/50 text-center italic">
+            Ou cliquez directement sur la bague
+        </div>
+    </div>
+
+    <!-- Mode Status Title (Bottom Right) -->
+    <div id="modeStatusTitle"
+        class="hidden absolute bottom-8 right-8 z-50 text-right pointer-events-none transition-all duration-500">
+        <h2 class="text-3xl font-bold text-black tracking-wider">MODE
+            PRÉSENTATION</h2>
+        <div class="h-1 w-24 bg-blue-500 ml-auto mt-2 rounded-full shadow-[0_0_10px_rgba(59,130,246,0.8)]"></div>
     </div>
 
     <!-- Progress Stepper -->

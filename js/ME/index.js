@@ -24,7 +24,7 @@ async function init() {
     scenes.OFFICE = officeScene;
 
     // Démarrer avec OFFICE
-    goToScene('OFFICE');
+    goToScene('CAD');
 
     console.log("✅ Application démarrée");
 }

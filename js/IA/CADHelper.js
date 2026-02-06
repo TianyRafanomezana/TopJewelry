@@ -16,7 +16,7 @@ export function createCADCamera(scene, canvas) {
         "cadCamera",
         Math.PI / 4,
         Math.PI / 3,
-        12,
+        15,
         new BABYLON.Vector3(0, 2, 0),
         scene
     );
@@ -129,7 +129,7 @@ export function toggleAnalysisMode(scene, isActive, ringMesh, interactionState, 
     if (!camera || !ringMesh) return;
 
     if (isActive) { // Activer -> Zoom In
-        zoomToMesh(camera, ringMesh, 8, 1000, () => {
+        zoomToMesh(camera, ringMesh, 5, undefined, () => {
             console.log("🔍 Analyse activée");
             if (interactionState) {
                 interactionState.enabled = true; // Activer interactions pierres
@@ -139,7 +139,7 @@ export function toggleAnalysisMode(scene, isActive, ringMesh, interactionState, 
             }
         });
     } else { // Désactiver -> Zoom Out (Reset)
-        resetCameraZoom(camera, ringMesh.position, 15, 1000, () => { // Reset à 15
+        resetCameraZoom(camera, ringMesh.position, 15, undefined, () => { // Reset à 15
             console.log("🔍 Analyse désactivée");
             if (interactionState) {
                 interactionState.enabled = false; // Désactiver interactions pierres
@@ -155,10 +155,13 @@ export function toggleAnalysisMode(scene, isActive, ringMesh, interactionState, 
 /**
  * Identifier et configurer les pierres
  */
-export function setupCADStones(scene, meshes) {
+/**
+ * Identifier et configurer les pierres
+ */
+export function setupCADStones(scene, meshes, onSelectionChange) {
     const { stones, metals } = identifyStones(meshes);
     applyStoneColors(stones, Config.stoneColors);
-    const interactionState = setupStoneInteraction(scene, stones, metals);
+    const interactionState = setupStoneInteraction(scene, stones, metals, onSelectionChange);
 
     return { stones, metals, interactionState };
 }
@@ -192,6 +195,26 @@ export function setupCADInputs(scene, cadScene, ringMesh, interactionState, hitb
         if (e.key === 'z' || e.key === 'Z') {
             console.log("⌨️ Touche Z pressée -> Toggle Analyse");
             cadScene.toggleAnalysisMode();
+        }
+        // Touche Espace pour la rotation
+        if (e.key === ' ') {
+            e.preventDefault(); // Empêcher le scroll de la page
+            console.log("⌨️ Touche Espace pressée -> Toggle Rotation");
+            cadScene.handleRotationToggle();
+        }
+        // Touche P pour les pierres
+        if (e.key.toLowerCase() === 'p') {
+            console.log("⌨️ Touche P pressée -> Toggle Visibilité Pierres");
+            if (cadScene.toggleStonesVisibility) {
+                cadScene.toggleStonesVisibility();
+            }
+        }
+        // Touche D pour le détail (Extraction)
+        if (e.key.toLowerCase() === 'd') {
+            console.log("⌨️ Touche D pressée -> Toggle Extraction Detail");
+            if (cadScene.toggleExtraction) {
+                cadScene.toggleExtraction();
+            }
         }
     };
     window.addEventListener('keydown', keyHandler);
@@ -273,16 +296,42 @@ export function enterCADScene(scene, engine, uiManager, ringMesh, rotationCallba
         }
 
         let frame = 0;
-        newRotationCallback = scene.registerBeforeRender(() => {
+        const rotateFunc = () => {
             ringMesh.rotation.y += 0.005;
-            // Debug frame
             frame++;
             if (frame % 60 === 0) console.log("🔄 Rotating...", ringMesh.rotation.y.toFixed(2));
-        });
-        console.log("▶️ Rotation démarrée");
+        };
+        scene.registerBeforeRender(rotateFunc);
+        console.log("▶️ Rotation démarrée (Helper). Func:", rotateFunc);
+        return rotateFunc;
     }
 
     return newRotationCallback;
+}
+
+/**
+ * Toggle la rotation automatique
+ */
+export function toggleAutoRotation(scene, ringMesh, currentCallback) {
+    if (currentCallback) {
+        // Stop
+        scene.unregisterBeforeRender(currentCallback);
+        console.log("⏸️ Rotation stoppée");
+        return null;
+    } else {
+        // Start
+        if (!ringMesh) return null;
+
+        // S'assurer que le quaternion est off
+        if (ringMesh.rotationQuaternion) ringMesh.rotationQuaternion = null;
+
+        const rotateFunc = () => {
+            ringMesh.rotation.y += 0.005;
+        };
+        scene.registerBeforeRender(rotateFunc);
+        console.log("▶️ Rotation redémarrée");
+        return rotateFunc;
+    }
 }
 
 /**
