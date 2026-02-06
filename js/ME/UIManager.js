@@ -10,6 +10,7 @@ export class UIManager {
         this.infoBulle = document.getElementById('infoBulle');
         this.statusText = document.getElementById('statusText');
         this.infoTitle = document.getElementById('infoTitle');
+        this.caoInfoModal = document.getElementById('caoInfoModal');
     }
 
     // ========================================
@@ -109,11 +110,35 @@ export class UIManager {
     }
 
     // ========================================
+    // CAO INFO MODAL (Right Side)
+    // ========================================
+    showCaoInfoModal() {
+        if (this.caoInfoModal) {
+            this.caoInfoModal.classList.remove('hidden');
+            // Réactiver les événements de pointeur si nécessaire (bien que le CSS ait pointer-events-none, on peut vouloir cliquer dessus ?)
+            // Ah non, le modal est informatif "pointer-events-none" de base dans le HTML.
+            // Si on veut qu'il bloque pas quand caché, c'est bon.
+            // Mais s'il a disparu visuellement mais reste là...
+
+            // Forcer le masquage pour être sûr
+            this.caoInfoModal.style.display = 'block';
+        }
+    }
+
+    hideCaoInfoModal() {
+        if (this.caoInfoModal) {
+            this.caoInfoModal.classList.add('hidden');
+            this.caoInfoModal.style.display = 'none'; // Sécurité additionnelle
+        }
+    }
+
+    // ========================================
     // HIDE ALL
     // ========================================
     hideAll() {
         this.hideStatusModal();
         this.hideBackButton();
         this.hideTooltip();
+        this.hideCaoInfoModal();
     }
 }

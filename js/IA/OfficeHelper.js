@@ -51,8 +51,10 @@ export function changeScreenContent(scene, imagePath, fadeIn = false) {
 }
 
 /**
- * Éteindre/allumer la LED de la tour
+ * Éteindre/allumer la LED de la tour avec animation progressive
  */
+let ledAnimationInterval = null;
+
 export function setLEDPower(scene, isOn) {
     let ledMesh = scene.getMeshByName(Config.meshes.powerLED);
     if (!ledMesh) {
@@ -64,16 +66,51 @@ export function setLEDPower(scene, isOn) {
         return;
     }
 
+    // Clear any existing animation
+    if (ledAnimationInterval) {
+        clearInterval(ledAnimationInterval);
+        ledAnimationInterval = null;
+    }
+
     if (isOn) {
+        // Turn LED ON with fade-in after delay
         ledMesh.isVisible = true;
-        if (ledMesh.material) {
-            ledMesh.material.emissiveColor = new BABYLON.Color3(0, 0.5, 1);
-            ledMesh.material.diffuseColor = new BABYLON.Color3(0, 0.5, 1);
-        }
-        console.log("💡 LED allumée");
+
+        setTimeout(() => {
+            let intensity = 0;
+            ledAnimationInterval = setInterval(() => {
+                intensity += 0.05;
+                if (intensity >= 1) {
+                    intensity = 1;
+                    clearInterval(ledAnimationInterval);
+                    ledAnimationInterval = null;
+                }
+                if (ledMesh.material) {
+                    ledMesh.material.emissiveColor = new BABYLON.Color3(0, 0.5 * intensity, intensity);
+                    ledMesh.material.diffuseColor = new BABYLON.Color3(0, 0.5 * intensity, intensity);
+                }
+            }, 30);
+        }, 200); // 200ms delay before fade-in starts
+
+        console.log("💡 LED allumage progressif...");
     } else {
-        ledMesh.isVisible = false;
-        console.log("💡 LED éteinte");
+        // Turn LED OFF with fade-out
+        let intensity = 1;
+        ledAnimationInterval = setInterval(() => {
+            intensity -= 0.1;
+            if (intensity <= 0) {
+                intensity = 0;
+                clearInterval(ledAnimationInterval);
+                ledAnimationInterval = null;
+                ledMesh.isVisible = false;
+            }
+            if (ledMesh.material) {
+                ledMesh.material.emissiveColor = new BABYLON.Color3(0, 0.5 * intensity, intensity);
+                ledMesh.material.diffuseColor = new BABYLON.Color3(0, 0.5 * intensity, intensity);
+            }
+        }, 30);
+
+        console.log("💡 LED extinction progressive...");
     }
 }
 

@@ -82,11 +82,27 @@ export function setupStoneInteraction(scene, stones, metals) {
         selectedStone: null,
         selectedMetal: null,
         stoneHighlight: new BABYLON.HighlightLayer("stoneHighlight", scene),
-        metalHighlight: new BABYLON.HighlightLayer("metalHighlight", scene)
+        metalHighlight: new BABYLON.HighlightLayer("metalHighlight", scene),
+        enabled: false, // Désactivé par défaut
+
+        deselectAll: () => {
+            if (state.selectedStone) {
+                state.stoneHighlight.removeMesh(state.selectedStone);
+                state.selectedStone = null;
+            }
+            if (state.selectedMetal) {
+                state.metalHighlight.removeMesh(state.selectedMetal);
+                state.selectedMetal = null;
+            }
+            console.log("🧹 Tout désélectionné");
+        }
     };
 
     // Gestion des clics
     scene.onPointerDown = (evt, pickInfo) => {
+        // Bloquer si interactions désactivées
+        if (!state.enabled) return;
+
         if (pickInfo.hit && pickInfo.pickedMesh) {
             let mesh = pickInfo.pickedMesh;
 

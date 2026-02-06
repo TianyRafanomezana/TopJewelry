@@ -65,27 +65,25 @@ export class InteractionManager {
                     let tooltipText = config.tooltip;
                     let cursorStyle = config.cursor;
 
-                    if (config.type === "screen_action") {
-                        if (this.isZoomed) {
-                            if (this.isScreenOn) {
-                                tooltipText = "💻 Cliquez pour découvrir la CAO";
-                                cursorStyle = "pointer";
-                            } else {
-                                tooltipText = "";
-                                cursorStyle = "default";
-                            }
-                        } else {
-                            tooltipText = "🔍 Cliquez pour s'approcher";
+                    // Tooltip UNIQUEMENT quand pas zoomé (au début)
+                    if (this.isZoomed) {
+                        // Quand zoomé : pas de tooltip, juste le curseur
+                        tooltipText = "";
+                        if (config.type === "screen_action" && this.isScreenOn) {
+                            cursorStyle = "pointer";
+                        } else if (config.type === "power_switch") {
+                            cursorStyle = "pointer";
                         }
-                    }
-                    else if (config.type === "power_switch") {
-                        tooltipText = this.isScreenOn ? "🔴 Éteindre" : "🟢 Allumer";
-                        cursorStyle = "pointer";
+                    } else {
+                        // Pas zoomé : afficher le tooltip
+                        if (config.type === "focus" || config.type === "screen_action") {
+                            tooltipText = "🔍 Voir la production CAO";
+                        }
                     }
 
                     if (cursorStyle) document.body.style.cursor = cursorStyle;
 
-                    if (tooltipText) this.uiManager.showTooltip(tooltipText);
+                    if (tooltipText && !this.isZoomed) this.uiManager.showTooltip(tooltipText);
                     else this.uiManager.hideTooltip();
 
                     // 🤖 Appel direct helper IA (plus de sceneManager)
@@ -191,6 +189,7 @@ export class InteractionManager {
 
             BABYLON.Animation.CreateAndStartAnimation("animAlpha", camera, "alpha", 60, 60, camera.alpha, targetAlpha, 2, new BABYLON.SineEase(), () => {
                 this.uiManager.showStatusModal(this.isScreenOn);
+                this.uiManager.showCaoInfoModal(); // Afficher modale CAO à droite
             });
         }
     }
@@ -242,6 +241,7 @@ export class InteractionManager {
         if (camera) {
             this.uiManager.hideBackButton();
             this.uiManager.hideStatusModal();
+            this.uiManager.hideCaoInfoModal(); // Cacher modale CAO
 
             if (this.isScreenOn) {
                 this.isScreenOn = false;

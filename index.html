@@ -54,7 +54,7 @@
 
 
     <div id="infoBulle"
-        class="hidden pointer-events-auto bg-white/10 backdrop-blur-md p-4 rounded-xl border border-white/20 w-64 shadow-2xl absolute z-50">
+        class="hidden pointer-events-auto bg-white/10 backdrop-blur-md p-4 rounded-xl border border-white/20 w-64 shadow-2xl absolute z-50 top-4 left-1/2 transform -translate-x-1/2">
         <h2 id="infoTitle" class="font-bold text-blue-400">Composant</h2>
         <p id="infoDesc" class="text-sm text-gray-200">Description...</p>
     </div>
@@ -67,6 +67,62 @@
     <div id="statusModal"
         class="hidden absolute top-4 left-1/2 transform -translate-x-1/2 z-50 bg-white/10 backdrop-blur-md text-white border border-white/20 px-6 py-3 rounded-lg shadow-2xl pointer-events-none">
         <p id="statusText" class="text-sm font-medium text-center"></p>
+    </div>
+
+    <!-- CAO Info Modal (Right Side) -->
+    <div id="caoInfoModal"
+        class="hidden absolute top-1/2 right-8 transform -translate-y-1/2 z-50 bg-gradient-to-br from-slate-900/95 to-slate-800/95 backdrop-blur-xl text-white border border-blue-400/30 p-6 rounded-2xl shadow-2xl w-80 pointer-events-none transition-all duration-500">
+
+        <div class="flex items-center gap-3 mb-4">
+            <div
+                class="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
+                <span class="text-xl">💎</span>
+            </div>
+            <h2 class="text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+                Station CAO
+            </h2>
+        </div>
+
+        <p class="text-gray-300 text-sm mb-4 leading-relaxed">
+            La création d'une bague commence ici ! Un poste de travail puissant est essentiel pour la <strong
+                class="text-blue-400">Conception Assistée par Ordinateur</strong>.
+        </p>
+
+        <div class="space-y-3 mb-4">
+            <h3 class="text-sm font-semibold text-blue-400 uppercase tracking-wide">Configuration requise</h3>
+
+            <div class="flex items-center gap-2 text-sm">
+                <span class="text-green-400">✓</span>
+                <span class="text-gray-300"><strong>GPU</strong> : RTX 3070+ ou équivalent</span>
+            </div>
+            <div class="flex items-center gap-2 text-sm">
+                <span class="text-green-400">✓</span>
+                <span class="text-gray-300"><strong>RAM</strong> : 32 Go minimum</span>
+            </div>
+            <div class="flex items-center gap-2 text-sm">
+                <span class="text-green-400">✓</span>
+                <span class="text-gray-300"><strong>CPU</strong> : Intel i7 / AMD Ryzen 7+</span>
+            </div>
+            <div class="flex items-center gap-2 text-sm">
+                <span class="text-green-400">✓</span>
+                <span class="text-gray-300"><strong>Stockage</strong> : SSD NVMe 1 To</span>
+            </div>
+        </div>
+
+        <div class="space-y-2 pt-3 border-t border-white/10">
+            <h3 class="text-sm font-semibold text-purple-400 uppercase tracking-wide">Logiciels</h3>
+            <div class="flex flex-wrap gap-2">
+                <span class="px-2 py-1 bg-blue-500/20 rounded-md text-xs text-blue-300">Rhino 3D</span>
+                <span class="px-2 py-1 bg-purple-500/20 rounded-md text-xs text-purple-300">MatrixGold</span>
+                <span class="px-2 py-1 bg-red-500/20 rounded-md text-xs text-red-300">SolidWorks</span>
+            </div>
+        </div>
+
+        <div class="mt-4 pt-3 border-t border-white/10">
+            <p class="text-xs text-gray-400 italic text-center">
+                ⚡ Allumez le PC pour découvrir la CAO en action
+            </p>
+        </div>
     </div>
 
     <!-- Progress Stepper -->
